@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portfolio.Infrastructure", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portfolio.Web", "Portfolio.Web\Portfolio.Web.csproj", "{A92E4C39-D5FA-53C4-FF40-9EF4BADAC204}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portfolio.Test", "Portfolio.Test\Portfolio.Test.csproj", "{35481B2E-88B3-CAB8-FC05-52EA927EC0AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portfolio.Tests", "Portfolio.Test\Portfolio.Tests.csproj", "{35481B2E-88B3-CAB8-FC05-52EA927EC0AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
