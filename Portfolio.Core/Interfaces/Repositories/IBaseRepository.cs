@@ -8,12 +8,12 @@ namespace Portfolio.Core.Interfaces.Repositories
 {
     public interface IBaseRepository<T>
     {
-        Task<T> GetByIdAsync(int id);
+        Task<T> GetByIdAsync(string id);
         IQueryable<T> GetAll();
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<IEnumerable<T>> GetAllAsync(string userId);
         Task<bool> AddAsync(T toAdd);
         Task<bool> UpdateAsync(T toUpdate);
         Task<bool> DeleteAsync(T toDelete);
-        Task<bool> CheckIfExistsAsync(int id);
+        Task<bool> CheckIfExistsAsync(string id);
     }
 }
