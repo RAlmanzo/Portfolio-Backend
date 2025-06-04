@@ -16,7 +16,7 @@ namespace Portfolio.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
         {
-            services.Configure<MongoDb>(config.GetSection("MongoDb"));
+            services.Configure<MongoDbSettings>(config.GetSection("MongoDb"));
             services.AddSingleton<MongoDbContext>();
 
             return services;
