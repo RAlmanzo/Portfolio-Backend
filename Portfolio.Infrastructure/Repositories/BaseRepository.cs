@@ -36,9 +36,9 @@ namespace Portfolio.Infrastructure.Repositories
             await _collection.InsertOneAsync(toAdd);
         }
 
-        public Task DeleteAsync(T toDelete)
+        public async Task DeleteAsync(T toDelete)
         {
-            throw new NotImplementedException();
+            await _collection.DeleteOneAsync(e => e.Id == toDelete.Id);
         }
 
         public async Task UpdateAsync(T toUpdate)
