@@ -40,14 +40,14 @@ namespace Portfolio.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync(string userId)
         {
-            throw new NotImplementedException();
+            return await _collection.Find(p => p.Id == userId).ToListAsync();
         }
 
-        public Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            return await _collection.Find(e => e.Id == id).FirstOrDefaultAsync();
         }
 
         public Task<bool> UpdateAsync(T toUpdate)
