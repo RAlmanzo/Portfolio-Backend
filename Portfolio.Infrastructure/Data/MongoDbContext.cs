@@ -13,7 +13,7 @@ namespace Portfolio.Infrastructure.Data
     {
         private readonly IMongoDatabase _database;
 
-        public MongoDbContext(IOptions<MongoDb> settings)
+        public MongoDbContext(IOptions<MongoDbSettings> settings)
         {
             var client = new MongoClient(settings.Value.ConnectionString);
             _database = client.GetDatabase(settings.Value.DatabaseName);
