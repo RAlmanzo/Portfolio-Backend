@@ -51,9 +51,9 @@ namespace Portfolio.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task CheckIfExistsAsync(string id)
+        public async Task CheckIfExistsAsync(string id)
         {
-            throw new NotImplementedException();
+            await _collection.Find(e => e.Id == id).FirstOrDefaultAsync();
         }
     }
 }
