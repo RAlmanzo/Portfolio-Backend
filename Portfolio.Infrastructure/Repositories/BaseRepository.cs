@@ -41,12 +41,12 @@ namespace Portfolio.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public IQueryable<T> GetAll()
+        public async Task UpdateAsync(T toUpdate)
         {
-            throw new NotImplementedException();
+            await _collection.ReplaceOneAsync(e => e.Id == toUpdate.Id, toUpdate);
         }
 
-        public Task UpdateAsync(T toUpdate)
+        public IQueryable<T> GetAll()
         {
             throw new NotImplementedException();
         }
