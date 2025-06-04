@@ -2,6 +2,7 @@
 using Portfolio.Core.Entities;
 using Portfolio.Core.Interfaces.Repositories;
 using Portfolio.Infrastructure.Data;
+using SharpCompress.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,26 +21,6 @@ namespace Portfolio.Infrastructure.Repositories
             _collection = context.GetCollection<T>(collectionTarget);
         }
 
-        public Task<bool> AddAsync(T toAdd)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> CheckIfExistsAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeleteAsync(T toDelete)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQueryable<T> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<T>> GetAllAsync(string userId)
         {
             return await _collection.Find(p => p.Id == userId).ToListAsync();
@@ -50,7 +31,27 @@ namespace Portfolio.Infrastructure.Repositories
             return await _collection.Find(e => e.Id == id).FirstOrDefaultAsync();
         }
 
-        public Task<bool> UpdateAsync(T toUpdate)
+        public async Task AddAsync(T toAdd)
+        {
+            await _collection.InsertOneAsync(toAdd);
+        }
+
+        public Task DeleteAsync(T toDelete)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<T> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(T toUpdate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CheckIfExistsAsync(string id)
         {
             throw new NotImplementedException();
         }
