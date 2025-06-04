@@ -14,8 +14,4 @@
     <ProjectReference Include="..\Portfolio.Core\Portfolio.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Settings\" />
-  </ItemGroup>
-
 </Project>
