@@ -1,5 +1,7 @@
-﻿using Portfolio.Core.Entities;
+﻿using MongoDB.Driver;
+using Portfolio.Core.Entities;
 using Portfolio.Core.Interfaces.Repositories;
+using Portfolio.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,14 @@ namespace Portfolio.Infrastructure.Repositories
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
+        private readonly IMongoCollection<T> _collection;
+
+        public BaseRepository(MongoDbContext context)
+        {
+            string collectionTarget = typeof(T).Name + "s";
+            _collection = context.GetCollection<T>(collectionTarget);
+        }
+
         public Task<bool> AddAsync(T toAdd)
         {
             throw new NotImplementedException();
