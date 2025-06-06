@@ -17,7 +17,7 @@ namespace Portfolio.Infrastructure.Repositories
 
         public BaseRepository(MongoDbContext context)
         {
-            string collectionTarget = typeof(T).Name + "s";
+            string collectionTarget = typeof(T).Name.ToLower() + "s";
             _collection = context.GetCollection<T>(collectionTarget);
         }
 
