@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>cfaacd86-bd50-4bdd-b176-f3ce75cb2a40</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +14,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+	  <ProjectReference Include="..\Portfolio.Infrastructure\Portfolio.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

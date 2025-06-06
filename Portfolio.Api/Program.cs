@@ -1,4 +1,9 @@
+using Portfolio.Infrastructure.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
+
+//Register mongodb
+builder.Services.RegisterMongoDb(builder.Configuration);
 
 // Add services to the container.
 
