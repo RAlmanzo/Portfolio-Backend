@@ -1,4 +1,6 @@
+using Portfolio.Core.Interfaces.Services;
 using Portfolio.Infrastructure.Extensions;
+using Portfolio.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.RegisterMongoDb(builder.Configuration);
 
 // Add services to the container.
+builder.Services.AddSingleton<IEmailService, EmailService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
