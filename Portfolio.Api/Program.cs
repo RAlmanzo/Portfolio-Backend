@@ -26,7 +26,7 @@ builder.Services.AddCors(options =>
 
     options.AddPolicy("ProdCors", policy =>
     {
-        policy.WithOrigins("https://jouwgebruikersnaam.github.io")
+        policy.WithOrigins("https://ralmanzo.github.io")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
