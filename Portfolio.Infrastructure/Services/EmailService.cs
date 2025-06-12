@@ -26,7 +26,7 @@ namespace Portfolio.Infrastructure.Services
             try
             {
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress(emailCreateRequestModel.From, emailCreateRequestModel.From));
+                message.From.Add(new MailboxAddress(emailCreateRequestModel.Name, emailCreateRequestModel.Email));
                 message.To.Add(new MailboxAddress(_configuration["Smtp:User"], _configuration["Smtp:User"]));
                 message.Subject = emailCreateRequestModel.Subject;
                 message.Body = new TextPart("html") { Text = emailCreateRequestModel.Message };
