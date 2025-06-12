@@ -23,7 +23,8 @@ namespace Portfolio.Api.Controllers
             (
                 new EmailCreateRequestModel
                 {
-                    From = emailRequestDto.From,
+                    Name = emailRequestDto.Name,
+                    Email = emailRequestDto.Email,
                     Subject = emailRequestDto.Subject,
                     Message = emailRequestDto.Message,
                 }
