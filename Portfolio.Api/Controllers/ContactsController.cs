@@ -17,7 +17,7 @@ namespace Portfolio.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendEmailAsync([FromForm] EmailRequestDto emailRequestDto)
+        public async Task<IActionResult> SendEmailAsync([FromBody] EmailRequestDto emailRequestDto)
         {
             var result = await _emailService.SendEmailAsync
             (
