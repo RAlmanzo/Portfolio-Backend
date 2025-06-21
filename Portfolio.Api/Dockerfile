@@ -1,41 +1,35 @@
+ARG DOTNET_VERSION=8.0
 
-# Build stage
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
-
+# 🛠️ Build Stage
+FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION} AS build
 WORKDIR /src
 
-# Kopieer alleen solution en project files eerst om caching te benutten
-COPY *.sln .
-COPY Portfolio.Api/*.csproj ./Portfolio.Api/
-COPY Portfolio.Core/*.csproj ./Portfolio.Core/
-COPY Portfolio.Infrastructure/*.csproj ./Portfolio.Infrastructure/
+ARG BUILD_CONFIGURATION=Release
 
-# Restore dependencies (gecached tenzij projectfiles wijzigen)
-RUN dotnet restore
+# 📦 Projectbestanden kopiëren
+COPY ["Portfolio.Api/Portfolio.Api.csproj", "Portfolio.Api/"]
+COPY ["Portfolio.Core/Portfolio.Core.csproj", "Portfolio.Core/"]
+COPY ["Portfolio.Infrastructure/Portfolio.Infrastructure.csproj", "Portfolio.Infrastructure/"]
 
-# Kopieer daarna de rest van de broncode
+# 🔄 Dependencies restoren (gebruikt caching optimaal)
+RUN dotnet restore "Portfolio.Api/Portfolio.Api.csproj"
+
+# 📁 Alles kopiëren voor build
 COPY . .
+WORKDIR "/src/Portfolio.Api"
 
-ARG TARGETARCH
+# 🏗️ Build en publish
+RUN dotnet publish "Portfolio.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish
 
-# Publish in Release mode, architecture-specifiek
-RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
-    dotnet publish -c Release -a ${TARGETARCH/amd64/x64} --use-current-runtime --self-contained false -o /app
-
-# Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS final
-
+# 🚀 Runtime Stage
+FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION} AS final
 WORKDIR /app
 
-# Kopieer gepubliceerde app vanuit build stage
-COPY --from=build /app .
+# 📤 Publicatie uit build-stage kopiëren
+COPY --from=build /app/publish .
 
-# Poort waar de app op luistert (optioneel maar duidelijk)
-EXPOSE 5000
+# 🌐 Expose poort
+EXPOSE 8080
 
-# Run als niet-root gebruiker voor security
-USER $APP_UID
-
-# Start de app
+# 🏃‍♂️ Start de app
 ENTRYPOINT ["dotnet", "Portfolio.Api.dll"]
-
