@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+    <ProjectReference Include="..\Portfolio.Core\Portfolio.Core.csproj" />
 	  <ProjectReference Include="..\Portfolio.Infrastructure\Portfolio.Infrastructure.csproj" />
   </ItemGroup>
 
