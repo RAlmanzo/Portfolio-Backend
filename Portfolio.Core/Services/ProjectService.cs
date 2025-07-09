@@ -53,6 +53,7 @@ namespace Portfolio.Core.Services
         public Task<ResultModel<Project>> CreateProjectAsync(ProjectCreateRequestModel ProjectCreateRequestModel)
         {
             throw new NotImplementedException();
+            //TODO: Research Store images in wwwroot or external db???
         }
 
         public async Task<ResultModel<Project>> DeleteProjectAsync(string id)
@@ -70,7 +71,8 @@ namespace Portfolio.Core.Services
                     };
                 }
 
-                //delete images
+                //TODO: delete images from db or wwwroot?
+
                 //delete project
                 await _projectRepository.DeleteAsync(selectedProject);
 
