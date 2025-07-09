@@ -53,11 +53,40 @@ namespace Portfolio.Core.Services
         public Task<ResultModel<Project>> CreateProjectAsync(ProjectCreateRequestModel ProjectCreateRequestModel)
         {
             throw new NotImplementedException();
+            //TODO: Research Store images in wwwroot or external db???
         }
 
-        public Task<ResultModel<Project>> DeleteProjectAsync(string id)
+        public async Task<ResultModel<Project>> DeleteProjectAsync(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //check if project exists
+                var selectedProject = await _projectRepository.GetByIdAsync(id);
+                if (selectedProject == null)
+                {
+                    return new ResultModel<Project>
+                    {
+                        Success = false,
+                        Errors = ["Project does not exist!"],
+                    };
+                }
+
+                //TODO: delete images from db or wwwroot?
+
+                //delete project
+                await _projectRepository.DeleteAsync(selectedProject);
+
+                return new ResultModel<Project> { Success = true, };
+            }
+            catch (Exception ex)
+            {
+                return new ResultModel<Project>
+                {
+                    Success = false,
+                    Errors = [$"An error occured while deleting project: {ex.Message}"],
+                };
+            }
+            
         }
 
         public Task<ResultModel<IEnumerable<Project>>> GetAllAsync()
