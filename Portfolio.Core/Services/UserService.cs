@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Portfolio.Infrastructure.Services
+namespace Portfolio.Core.Services
 {
-    public class UserService : IUserService
+    internal class UserService : IUserService
     {
         public Task<ResultModel<User>> CreateUserAsync(UserCreateRequestModel UserCreateRequestModel)
         {
