@@ -5,6 +5,7 @@ using Portfolio.Core.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -52,7 +53,12 @@ namespace Portfolio.Core.Services
 
         public Task<ResultModel<Project>> CreateProjectAsync(ProjectCreateRequestModel ProjectCreateRequestModel)
         {
-            throw new NotImplementedException();
+            //create new project
+            var newProject = new Project
+            {
+                UserId = ClaimTypes.NameIdentifier,
+                Name = ProjectCreateRequestModel.
+            };
         }
 
         public Task<ResultModel<Project>> DeleteProjectAsync(string id)
