@@ -21,24 +21,33 @@ namespace Portfolio.Core.Services
 
         public async Task<ResultModel<Project>> GetByIdAsync(string id)
         {
-            //get the project
-            var project = await _projectRepository.GetByIdAsync(id);
-
-            //create new resultmodel
-            var projectResultModel = new ResultModel<Project>();
-
-            //check if exists
-            if (project == null)
+            try
             {
-                projectResultModel.Success = false;
-                projectResultModel.Errors = ["No project found!"];
-                return projectResultModel;
-            }
+                var project = await _projectRepository.GetByIdAsync(id);
 
-            //if exists
-            projectResultModel.Success = true;
-            projectResultModel.Value = project;
-            return projectResultModel;
+                if (project == null)
+                {
+                    return new ResultModel<Project>
+                    {
+                        Success = false,
+                        Errors = ["No project found!"]
+                    };
+                }
+
+                return new ResultModel<Project>
+                {
+                    Success = true,
+                    Value = project
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResultModel<Project>
+                {
+                    Success = false,
+                    Errors = [$"An error occurred while retrieving project: {ex.Message}"]
+                };
+            }
         }
 
         public Task<ResultModel<Project>> CreateProjectAsync(ProjectCreateRequestModel ProjectCreateRequestModel)
