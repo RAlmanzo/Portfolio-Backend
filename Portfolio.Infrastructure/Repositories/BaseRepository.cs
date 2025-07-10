@@ -21,9 +21,9 @@ namespace Portfolio.Infrastructure.Repositories
             _collection = context.GetCollection<T>(collectionTarget);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(string userId)
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _collection.Find(p => p.Id == userId).ToListAsync();
+            return await _collection.Find(FilterDefinition<T>.Empty).ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(string id)
