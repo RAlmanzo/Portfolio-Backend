@@ -59,16 +59,75 @@ namespace Portfolio.Core.Services
                 UserId = ClaimTypes.NameIdentifier,
                 Name = ProjectCreateRequestModel.
             };
+
+            //TODO: Research Store images in wwwroot or external db???
         }
 
-        public Task<ResultModel<Project>> DeleteProjectAsync(string id)
+        public async Task<ResultModel<Project>> DeleteProjectAsync(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //check if project exists
+                var selectedProject = await _projectRepository.GetByIdAsync(id);
+                if (selectedProject == null)
+                {
+                    return new ResultModel<Project>
+                    {
+                        Success = false,
+                        Errors = ["Project does not exist!"],
+                    };
+                }
+
+                //TODO: delete images from db or wwwroot?
+
+                //delete project
+                await _projectRepository.DeleteAsync(selectedProject);
+
+                return new ResultModel<Project> { Success = true, };
+            }
+            catch (Exception ex)
+            {
+                return new ResultModel<Project>
+                {
+                    Success = false,
+                    Errors = [$"An error occured while deleting project: {ex.Message}"],
+                };
+            }
+            
         }
 
-        public Task<ResultModel<IEnumerable<Project>>> GetAllAsync()
+        public async Task<ResultModel<IEnumerable<Project>>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                //get the projects
+                var projects = await _projectRepository.GetAllAsync();
+
+                //check if exists
+                if (!projects.Any()) 
+                {
+                    return new ResultModel<IEnumerable<Project>>
+                    {
+                        Success = false,
+                        Errors = ["No projects found"],
+                    };
+                }
+
+                //if exists
+                return new ResultModel<IEnumerable<Project>> 
+                { 
+                    Success = true,
+                    Value = projects,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResultModel<IEnumerable<Project>>
+                {
+                    Success = false,
+                    Errors = [$"An error occured while retrieving all projects: {ex.Message}"],
+                };
+            }
         }
 
         public Task<ResultModel<Project>> UpdateProjectAsync(ProjectUpdateRequestModel ProjectUpdateRequestModel)
