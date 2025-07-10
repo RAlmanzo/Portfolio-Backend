@@ -31,9 +31,10 @@ namespace Portfolio.Infrastructure.Repositories
             return await _collection.Find(e => e.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task AddAsync(T toAdd)
+        public async Task<bool> AddAsync(T toAdd)
         {
             await _collection.InsertOneAsync(toAdd);
+            return true;
         }
 
         public async Task DeleteAsync(T toDelete)

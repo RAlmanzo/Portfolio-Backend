@@ -11,7 +11,7 @@ namespace Portfolio.Core.Interfaces.Repositories
         Task<T> GetByIdAsync(string id);
         IQueryable<T> GetAll();
         Task<IEnumerable<T>> GetAllAsync();
-        Task AddAsync(T toAdd);
+        Task<bool> AddAsync(T toAdd);
         Task UpdateAsync(T toUpdate);
         Task DeleteAsync(T toDelete);
         Task CheckIfExistsAsync(string id);

@@ -5,6 +5,7 @@ using Portfolio.Core.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,10 +51,50 @@ namespace Portfolio.Core.Services
             }
         }
 
-        public Task<ResultModel<Project>> CreateProjectAsync(ProjectCreateRequestModel ProjectCreateRequestModel)
+        public async Task<ResultModel<Project>> CreateProjectAsync(ProjectCreateRequestModel ProjectCreateRequestModel)
         {
-            throw new NotImplementedException();
-            //TODO: Research Store images in wwwroot or external db???
+            try
+            {
+                //TODO: Research Store images in wwwroot or external db???
+
+                //create new project
+                var newProject = new Project
+                {
+                    Name = ProjectCreateRequestModel.Name,
+                    Description = ProjectCreateRequestModel.Description,
+                    FrontendTechStack = ProjectCreateRequestModel.FrontendTechStack?.ToList() ?? [],
+                    BackendTechStack = ProjectCreateRequestModel.BackendTechStack?.ToList() ?? [],
+                    FrontendGitHubUrl = ProjectCreateRequestModel.FrontendGitHubUrl,
+                    BackendGitHubUrl = ProjectCreateRequestModel.BackendGitHubUrl,
+                    ImagesPath = ProjectCreateRequestModel.ImagesPath?.ToList() ?? []
+                };
+
+                //call projectsrepo to add in db
+                var result = await _projectRepository.AddAsync(newProject);
+
+                if (!result)
+                {
+                    return new ResultModel<Project>
+                    {
+                        Success = false,
+                        Errors = ["Could not create new project"],
+                    };
+                }
+
+                return new ResultModel<Project>
+                {
+                    Success = true,
+                    Value = newProject,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResultModel<Project>
+                {
+                    Success = false,
+                    Errors = [$"An error occured while creating new project : {ex.Message}"]
+                };
+            }
         }
 
         public async Task<ResultModel<Project>> DeleteProjectAsync(string id)
@@ -85,8 +126,7 @@ namespace Portfolio.Core.Services
                     Success = false,
                     Errors = [$"An error occured while deleting project: {ex.Message}"],
                 };
-            }
-            
+            } 
         }
 
         public async Task<ResultModel<IEnumerable<Project>>> GetAllAsync()
