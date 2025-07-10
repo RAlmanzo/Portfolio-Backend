@@ -106,6 +106,7 @@ namespace Portfolio.Core.Services
                     };
                 }
 
+                //if exists
                 return new ResultModel<IEnumerable<Project>> 
                 { 
                     Success = true,
