@@ -118,7 +118,7 @@ namespace Portfolio.Core.Services
                 return new ResultModel<IEnumerable<Project>>
                 {
                     Success = false,
-                    Errors = [$"An error occured retrieving all projects: {ex.Message}"],
+                    Errors = [$"An error occured while retrieving all projects: {ex.Message}"],
                 };
             }
         }
