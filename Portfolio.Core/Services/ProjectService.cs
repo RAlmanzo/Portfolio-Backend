@@ -89,9 +89,37 @@ namespace Portfolio.Core.Services
             
         }
 
-        public Task<ResultModel<IEnumerable<Project>>> GetAllAsync()
+        public async Task<ResultModel<IEnumerable<Project>>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                //get the projects
+                var projects = await _projectRepository.GetAllAsync();
+
+                //check if exists
+                if (!projects.Any()) 
+                {
+                    return new ResultModel<IEnumerable<Project>>
+                    {
+                        Success = false,
+                        Errors = ["No projects found"],
+                    };
+                }
+
+                return new ResultModel<IEnumerable<Project>> 
+                { 
+                    Success = true,
+                    Value = projects,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResultModel<IEnumerable<Project>>
+                {
+                    Success = false,
+                    Errors = [$"An error occured retrieving all projects: {ex.Message}"],
+                };
+            }
         }
 
         public Task<ResultModel<Project>> UpdateProjectAsync(ProjectUpdateRequestModel ProjectUpdateRequestModel)
