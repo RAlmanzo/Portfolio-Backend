@@ -19,9 +19,38 @@ namespace Portfolio.Core.Services
             _educationRepository = educationRepository;
         }
 
-        public Task<ResultModel<Education>> GetByIdAsync(string id)
+        public async Task<ResultModel<Education>> GetByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //get education
+                var education = await _educationRepository.GetByIdAsync(id);
+
+                //check if exists
+                if (education == null) 
+                {
+                    return new ResultModel<Education>
+                    {
+                        Success = false,
+                        Errors = [$"No education found with id: {id}"],
+                    };
+                }
+
+                //if exists
+                return new ResultModel<Education>
+                {
+                    Success = true,
+                    Value = education,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResultModel<Education>
+                {
+                    Success = false,
+                    Errors = [$"An error occured while retrieving education: {ex.Message}"]
+                };
+            }
         }
 
         public Task<ResultModel<Education>> CreateEducationAsync(EducationCreateRequestModel EducationCreateRequestModel)
