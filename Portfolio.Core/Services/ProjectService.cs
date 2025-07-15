@@ -163,9 +163,52 @@ namespace Portfolio.Core.Services
             }
         }
 
-        public Task<ResultModel<Project>> UpdateProjectAsync(ProjectUpdateRequestModel ProjectUpdateRequestModel)
+        public async Task<ResultModel<Project>> UpdateProjectAsync(ProjectUpdateRequestModel ProjectUpdateRequestModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //get the project
+                var selectedProject = await _projectRepository.GetByIdAsync(ProjectUpdateRequestModel.Id);
+
+                //check if exists
+                if (selectedProject == null)
+                {
+                    return new ResultModel<Project>
+                    {
+                        Success = false,
+                        Errors = [$"Project with id: {ProjectUpdateRequestModel.Id} not found!"],
+                    };
+                }
+
+                //TODO: delete old images and add new images to db or wwwroot!!!!
+
+                //update project fields
+                selectedProject.Id = ProjectUpdateRequestModel.Id;
+                selectedProject.Name = ProjectUpdateRequestModel.Name;
+                selectedProject.Description = ProjectUpdateRequestModel.Description;
+                selectedProject.FrontendTechStack = ProjectUpdateRequestModel.FrontendTechStack.ToList();
+                selectedProject.BackendTechStack = ProjectUpdateRequestModel.BackendTechStack.ToList();
+                selectedProject.FrontendGitHubUrl = ProjectUpdateRequestModel.FrontendGitHubUrl;
+                selectedProject.BackendGitHubUrl = ProjectUpdateRequestModel.BackendGitHubUrl;
+                selectedProject.ImagesPath = ProjectUpdateRequestModel.ImagesPath.ToList();
+
+                //update db
+                await _projectRepository.UpdateAsync(selectedProject);
+
+                return new ResultModel<Project>
+                {
+                    Success = true,
+                    Value = selectedProject,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResultModel<Project>
+                {
+                    Success = false,
+                    Errors = [$"An error occured while updating project : {ex.Message}"]
+                };
+            }
         }
     }
 }
