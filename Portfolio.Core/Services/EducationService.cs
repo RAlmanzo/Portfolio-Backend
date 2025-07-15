@@ -1,4 +1,5 @@
 ﻿using Portfolio.Core.Entities;
+using Portfolio.Core.Interfaces.Repositories;
 using Portfolio.Core.Interfaces.Services;
 using Portfolio.Core.Services.Models;
 using System;
@@ -11,6 +12,13 @@ namespace Portfolio.Core.Services
 {
     public class EducationService : IEducationService
     {
+        private readonly IEducationRepository _educationRepository;
+
+        public EducationService(IEducationRepository educationRepository)
+        {
+            _educationRepository = educationRepository;
+        }
+
         public Task<ResultModel<Education>> GetByIdAsync(string id)
         {
             throw new NotImplementedException();
