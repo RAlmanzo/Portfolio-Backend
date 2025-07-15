@@ -88,9 +88,38 @@ namespace Portfolio.Core.Services
             }
         }
 
-        public Task<ResultModel<IEnumerable<Education>>> GetAllAsync()
+        public async Task<ResultModel<IEnumerable<Education>>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                //get the educations
+                var educations = await _educationRepository.GetAllAsync();
+
+                //check if exists
+                if (!educations.Any())
+                {
+                    return new ResultModel<IEnumerable<Education>>
+                    {
+                        Success = false,
+                        Errors = ["No educations found!"],
+                    };
+                }
+
+                //if exists
+                return new ResultModel<IEnumerable<Education>>
+                {
+                    Success = true,
+                    Value = educations,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResultModel<IEnumerable<Education>>
+                {
+                    Success = false,
+                    Errors = [$"An error occured while retrieving educations : {ex.Message}"]
+                };
+            }
         }
 
         public Task<ResultModel<Education>> UpdateEducationAsync(EducationtUpdateRequestModel EducationUpdateRequestModel)
