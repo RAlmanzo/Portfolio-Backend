@@ -58,9 +58,34 @@ namespace Portfolio.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task<ResultModel<Education>> DeleteEducationAsync(string id)
+        public async Task<ResultModel<Education>> DeleteEducationAsync(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //check if exists
+                var selectedEducation = await _educationRepository.GetByIdAsync(id);
+                if (selectedEducation == null)
+                {
+                    return new ResultModel<Education>
+                    {
+                        Success = false,
+                        Errors = [$"Education with id: {id}, does not exist!"]
+                    };
+                }
+
+                //delete education
+                await _educationRepository.DeleteAsync(selectedEducation);
+
+                return new ResultModel<Education> { Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ResultModel<Education>
+                {
+                    Success = false,
+                    Errors = [$"An error occured while deleting education : {ex.Message}"]
+                };
+            }
         }
 
         public Task<ResultModel<IEnumerable<Education>>> GetAllAsync()
