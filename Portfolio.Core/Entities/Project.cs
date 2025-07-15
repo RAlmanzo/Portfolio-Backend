@@ -8,11 +8,12 @@ namespace Portfolio.Core.Entities
 {
     public class Project: BaseEntity
     {
-        public string UserId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string TechStack { get; set; }
-        public string GitHub { get; set; }
-        public ICollection<string> Images { get; set; }
+        public ICollection<string> FrontendTechStack { get; set; }
+        public ICollection<string> BackendTechStack { get; set; }
+        public string FrontendGitHubUrl { get; set; }
+        public string BackendGitHubUrl { get; set; }
+        public ICollection<string> ImagesPath { get; set; }
     }
 }

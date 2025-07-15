@@ -21,9 +21,9 @@ namespace Portfolio.Infrastructure.Repositories
             _collection = context.GetCollection<T>(collectionTarget);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(string userId)
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _collection.Find(p => p.Id == userId).ToListAsync();
+            return await _collection.Find(FilterDefinition<T>.Empty).ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(string id)
@@ -31,9 +31,10 @@ namespace Portfolio.Infrastructure.Repositories
             return await _collection.Find(e => e.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task AddAsync(T toAdd)
+        public async Task<bool> AddAsync(T toAdd)
         {
             await _collection.InsertOneAsync(toAdd);
+            return true;
         }
 
         public async Task DeleteAsync(T toDelete)

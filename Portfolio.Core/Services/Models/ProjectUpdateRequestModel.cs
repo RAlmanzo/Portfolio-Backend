@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Portfolio.Core.Services.Models
 {
-    public class ProjectUpdateRequestModel
+    public class ProjectUpdateRequestModel : ProjectCreateRequestModel
     {
+        public string Id { get; set; }
     }
 }
