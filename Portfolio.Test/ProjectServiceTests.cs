@@ -340,6 +340,7 @@ namespace Portfolio.Tests
 
             // Assert
             result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
             result.Errors.Should().Contain(e => e.Contains("DB failure"));
         }
     }
