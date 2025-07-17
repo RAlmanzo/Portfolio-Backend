@@ -150,6 +150,23 @@ namespace Portfolio.Tests
             result.Errors.Should().Contain(e => e.Contains("DB failure"));
         }
 
+        [Fact]
+        public async Task DeleteProjectAsync_WhithValidProjectId_ReturnsSuccess()
+        {
+            // Arrange
+            var projectId = "abc123";
+            var existingProject = new Project { Id = projectId, Name = "Test Project" };
 
+            _mockProjectRepository.Setup(r => r.GetByIdAsync(projectId)).ReturnsAsync(existingProject);
+            _mockProjectRepository.Setup(r => r.DeleteAsync(existingProject)).Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _projectService.DeleteProjectAsync(projectId);
+
+            // Assert
+            result.Success.Should().BeTrue();
+            result.Value.Should().BeNull();
+            result.Errors.Should().BeNullOrEmpty();
+        }
     }
 }
