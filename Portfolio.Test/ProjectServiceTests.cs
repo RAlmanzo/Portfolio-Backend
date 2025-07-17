@@ -108,5 +108,24 @@ namespace Portfolio.Tests
                 .ComparingByMembers<ProjectCreateRequestModel>());
         }
 
+        [Fact]
+        public async Task CreateProjectAsync_WhitRepositoryFalseResponse_ReturnsFailureResult()
+        {
+            // Arrange
+            var request = new ProjectCreateRequestModel
+            {
+                Name = "My Project"
+            };
+
+            _mockProjectRepository.Setup(r => r.AddAsync(It.IsAny<Project>())).ReturnsAsync(false);
+
+            // Act
+            var result = await _projectService.CreateProjectAsync(request);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().Contain("Could not create new project");
+        }
     }
 }
