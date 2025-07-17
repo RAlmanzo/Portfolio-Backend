@@ -313,5 +313,34 @@ namespace Portfolio.Tests
             result.Value.Should().BeNull();
             result.Errors.Should().Contain($"Project with id: {request.Id} not found!");
         }
+
+        [Fact]
+        public async Task UpdateProjectAsync_WhithExceptionThrown_ReturnsError()
+        {
+            // Arrange
+            var request = new ProjectUpdateRequestModel
+            {
+                Id = "abc123",
+                Name = "Name",
+                Description = "Desc",
+                FrontendTechStack = new[] { "Vue" },
+                BackendTechStack = new[] { "MongoDB" },
+                FrontendGitHubUrl = "frontend",
+                BackendGitHubUrl = "backend",
+                ImagesPath = new[] { "img1.jpg" }
+            };
+
+            var existingProject = new Project { Id = request.Id };
+
+            _mockProjectRepository.Setup(r => r.GetByIdAsync(request.Id)).ReturnsAsync(existingProject);
+            _mockProjectRepository.Setup(r => r.UpdateAsync(It.IsAny<Project>())).ThrowsAsync(new Exception("DB failure"));
+
+            // Act
+            var result = await _projectService.UpdateProjectAsync(request);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Errors.Should().Contain(e => e.Contains("DB failure"));
+        }
     }
 }
