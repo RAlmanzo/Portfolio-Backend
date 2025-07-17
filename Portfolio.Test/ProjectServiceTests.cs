@@ -170,7 +170,7 @@ namespace Portfolio.Tests
         }
 
         [Fact]
-        public async Task DeleteProjectAsync_WhithInValidProjectId_ReturnsFailure()
+        public async Task DeleteProjectAsync_WhithInValidProjectId_ReturnsError()
         {
             // Arrange
             var projectId = "abc123";
@@ -184,6 +184,28 @@ namespace Portfolio.Tests
             result.Success.Should().BeFalse();
             result.Value.Should().BeNull();
             result.Errors.Should().Contain("Project does not exist!");
+        }
+
+        [Fact]
+        public async Task DeleteProjectAsync_WhithExceptionThrown_ReturnsError()
+        {
+            // Arrange
+            var projectId = "abc123";
+            var project = new Project { Id = projectId };
+
+            _mockProjectRepository.Setup(r => r.GetByIdAsync(projectId))
+                                  .ReturnsAsync(project);
+
+            _mockProjectRepository.Setup(r => r.DeleteAsync(project))
+                                  .ThrowsAsync(new Exception("DB failure"));
+
+            // Act
+            var result = await _projectService.DeleteProjectAsync(projectId);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().Contain(e => e.Contains("DB failure"));
         }
     }
 }
