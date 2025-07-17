@@ -168,5 +168,22 @@ namespace Portfolio.Tests
             result.Value.Should().BeNull();
             result.Errors.Should().BeNullOrEmpty();
         }
+
+        [Fact]
+        public async Task DeleteProjectAsync_WhithInValidProjectId_ReturnsFailure()
+        {
+            // Arrange
+            var projectId = "abc123";
+            _mockProjectRepository.Setup(r => r.GetByIdAsync(projectId))
+                          .ReturnsAsync((Project)null!);
+
+            // Act
+            var result = await _projectService.DeleteProjectAsync(projectId);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().Contain("Project does not exist!");
+        }
     }
 }
