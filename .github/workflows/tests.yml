@@ -16,14 +16,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Show directory structure
-      run: ls -Recurse
-
-
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.x'
 
     - name: Run unit tests
-      run: dotnet test ./Portfolio.Tests/Portfolio.Tests.csproj -v n
+      run: dotnet test Portfolio.Test/Portfolio.Tests.csproj -v n
