@@ -1,4 +1,6 @@
-﻿using Moq;
+﻿using FluentAssertions;
+using Moq;
+using Portfolio.Core.Entities;
 using Portfolio.Core.Interfaces.Repositories;
 using Portfolio.Core.Services;
 using System;
@@ -26,7 +28,20 @@ namespace Portfolio.Tests
         [Fact]
         public async Task GetByIdAsync_WithExistingProject_ReturnsProject()
         {
+            //Arrange
+            var projectId = "abc123";
+            var selectedProject = new Project { Id = projectId, Name = "Test project", Description = "Test description" };
 
+            _mockProjectRepository.Setup(repo => repo.GetByIdAsync(projectId)).ReturnsAsync(selectedProject);
+            
+            //Act
+
+            var result = await _projectService.GetByIdAsync(projectId);
+
+            //Assert
+            result.Success.Should().BeTrue();
+            result.Value.Should().NotBeNull();
+            result.Errors.Should().BeNull();
         }
     }
 }
