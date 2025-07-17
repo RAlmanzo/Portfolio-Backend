@@ -43,5 +43,22 @@ namespace Portfolio.Tests
             result.Value.Should().NotBeNull();
             result.Errors.Should().BeNull();
         }
+
+        [Fact]
+        public async Task GetByIdAsync_WithNoneExistingProjectId_ReturnsError()
+        {
+            // Arrange
+            var projectId = "abc123";
+
+            _mockProjectRepository.Setup(r => r.GetByIdAsync(projectId)).ReturnsAsync((Project)null!);
+
+            // Act
+            var result = await _projectService.GetByIdAsync(projectId);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Errors.Should().ContainSingle("No project found!");
+            result.Value.Should().BeNull();
+        }
     }
 }
