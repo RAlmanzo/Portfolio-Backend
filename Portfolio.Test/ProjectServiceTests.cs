@@ -228,5 +228,20 @@ namespace Portfolio.Tests
             result.Value.Should().BeEquivalentTo(projects);
             result.Errors.Should().BeNullOrEmpty();
         }
+
+        [Fact]
+        public async Task GetAllAsync_WithNoneExistingProjects_ReturnsError()
+        {
+            // Arrange
+            _mockProjectRepository.Setup(r => r.GetAllAsync()).ReturnsAsync([]);
+
+            // Act
+            var result = await _projectService.GetAllAsync();
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().Contain("No projects found");
+        }
     }
 }
