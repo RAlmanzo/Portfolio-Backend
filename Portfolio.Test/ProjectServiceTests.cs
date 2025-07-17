@@ -60,5 +60,22 @@ namespace Portfolio.Tests
             result.Errors.Should().ContainSingle("No project found!");
             result.Value.Should().BeNull();
         }
+
+        [Fact]
+        public async Task GetByIdAsync_WithRepositoryThrowException_ReturnsError()
+        {
+            // Arrange
+            var projectId = "error-case";
+
+            _mockProjectRepository.Setup(r => r.GetByIdAsync(projectId)).ThrowsAsync(new Exception("DB failure"));
+
+            // Act
+            var result = await _projectService.GetByIdAsync(projectId);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Errors.Should().ContainSingle(e => e.Contains("DB failure"));
+            result.Value.Should().BeNull();
+        }
     }
 }
