@@ -268,11 +268,11 @@ namespace Portfolio.Tests
                 Id = "abc123",
                 Name = "Updated Project",
                 Description = "Updated description",
-                FrontendTechStack = new[] { "Vue" },
-                BackendTechStack = new[] { "MongoDB" },
-                FrontendGitHubUrl = "http://frontend.git",
-                BackendGitHubUrl = "http://backend.git",
-                ImagesPath = new[] { "img1.jpg" }
+                FrontendTechStack = ["Vue"],
+                BackendTechStack = ["MongoDB"],
+                FrontendGitHubUrl = "FrontendUrl",
+                BackendGitHubUrl = "BackendUrl",
+                ImagesPath = ["img1.jpg"]
             };
 
             var existingProject = new Project { Id = request.Id };
@@ -293,5 +293,25 @@ namespace Portfolio.Tests
             result.Errors.Should().BeNullOrEmpty();
         }
 
+        [Fact]
+        public async Task UpdateProjectAsync_WhenProjectNotFound_ReturnsError()
+        {
+            // Arrange
+            var request = new ProjectUpdateRequestModel
+            {
+                Id = "abc123",
+                Name = "Updated project"
+            };
+
+            _mockProjectRepository.Setup(r => r.GetByIdAsync(request.Id)).ReturnsAsync((Project)null!);
+
+            // Act
+            var result = await _projectService.UpdateProjectAsync(request);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().Contain($"Project with id: {request.Id} not found!");
+        }
     }
 }
