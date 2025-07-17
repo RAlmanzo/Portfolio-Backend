@@ -323,11 +323,11 @@ namespace Portfolio.Tests
                 Id = "abc123",
                 Name = "Name",
                 Description = "Desc",
-                FrontendTechStack = new[] { "Vue" },
-                BackendTechStack = new[] { "MongoDB" },
+                FrontendTechStack = ["Vue"],
+                BackendTechStack = ["MongoDB"],
                 FrontendGitHubUrl = "frontend",
                 BackendGitHubUrl = "backend",
-                ImagesPath = new[] { "img1.jpg" }
+                ImagesPath = ["img1.jpg"]
             };
 
             var existingProject = new Project { Id = request.Id };
