@@ -243,5 +243,20 @@ namespace Portfolio.Tests
             result.Value.Should().BeNull();
             result.Errors.Should().Contain("No projects found");
         }
+
+        [Fact]
+        public async Task GetAllAsync_WhithExceptionThrown_ReturnsError()
+        {
+            // Arrange
+            _mockProjectRepository.Setup(r => r.GetAllAsync()).ThrowsAsync(new Exception("DB failure"));
+
+            // Act
+            var result = await _projectService.GetAllAsync();
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().Contain(e => e.Contains("DB failure"));
+        }
     }
 }
