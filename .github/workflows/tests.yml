@@ -22,5 +22,4 @@ jobs:
         dotnet-version: '8.x'
 
     - name: Run unit tests
-      working-directory: Portfolio.Tests
-      run: dotnet test -v n
+      run: dotnet test ./Portfolio.Tests/Portfolio.Tests.csproj -v n
