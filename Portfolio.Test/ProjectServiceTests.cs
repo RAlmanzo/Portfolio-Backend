@@ -207,5 +207,26 @@ namespace Portfolio.Tests
             result.Value.Should().BeNull();
             result.Errors.Should().Contain(e => e.Contains("DB failure"));
         }
+
+        [Fact]
+        public async Task GetAllAsync_WithExistingProjects_ReturnsProjects()
+        {
+            // Arrange
+            var projects = new List<Project>
+            {
+                new() { Id = "1", Name = "Test Project 1" },
+                new() { Id = "2", Name = "Test Project 2" }
+            };
+
+            _mockProjectRepository.Setup(r => r.GetAllAsync()).ReturnsAsync(projects);
+
+            // Act
+            var result = await _projectService.GetAllAsync();
+
+            // Assert
+            result.Success.Should().BeTrue();
+            result.Value.Should().BeEquivalentTo(projects);
+            result.Errors.Should().BeNullOrEmpty();
+        }
     }
 }
