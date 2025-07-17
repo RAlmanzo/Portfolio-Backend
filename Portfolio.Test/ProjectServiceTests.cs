@@ -3,6 +3,7 @@ using Moq;
 using Portfolio.Core.Entities;
 using Portfolio.Core.Interfaces.Repositories;
 using Portfolio.Core.Services;
+using Portfolio.Core.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,5 +78,35 @@ namespace Portfolio.Tests
             result.Errors.Should().ContainSingle(e => e.Contains("DB failure"));
             result.Value.Should().BeNull();
         }
+
+        [Fact]
+        public async Task CreateProjectAsync_WithValidInput_ReturnsSuccessResult()
+        {
+            // Arrange
+            var request = new ProjectCreateRequestModel
+            {
+                Name = "My Project",
+                Description = "Some description",
+                FrontendTechStack = ["Vue", "Tailwind"],
+                BackendTechStack = ["ASP.NET Core", "MongoDB"],
+                FrontendGitHubUrl = "FrontendUrl",
+                BackendGitHubUrl = "BackendUrl",
+                ImagesPath = ["img1.png", "img2.png"]
+            };
+
+            // Simuleer succesvolle insert in database
+            _mockProjectRepository.Setup(r => r.AddAsync(It.IsAny<Project>())).ReturnsAsync(true);
+
+            // Act
+            var result = await _projectService.CreateProjectAsync(request);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Success.Should().BeTrue();
+            result.Value.Should().NotBeNull();;
+            result.Value.Should().BeEquivalentTo(request, options => options
+                .ComparingByMembers<ProjectCreateRequestModel>());
+        }
+
     }
 }
