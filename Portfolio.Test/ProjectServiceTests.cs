@@ -42,7 +42,7 @@ namespace Portfolio.Tests
             //Assert
             result.Success.Should().BeTrue();
             result.Value.Should().NotBeNull();
-            result.Errors.Should().BeNull();
+            result.Errors.Should().BeNullOrEmpty();
         }
 
         [Fact]
@@ -103,6 +103,7 @@ namespace Portfolio.Tests
             // Assert
             result.Should().NotBeNull();
             result.Success.Should().BeTrue();
+            result.Errors.Should().BeNullOrEmpty();
             result.Value.Should().NotBeNull();;
             result.Value.Should().BeEquivalentTo(request, options => options
                 .ComparingByMembers<ProjectCreateRequestModel>());
@@ -127,5 +128,28 @@ namespace Portfolio.Tests
             result.Value.Should().BeNull();
             result.Errors.Should().Contain("Could not create new project");
         }
+
+        [Fact]
+        public async Task CreateProjectAsync_WhithExceptionThrown_ReturnsErrorResult()
+        {
+            // Arrange
+            var request = new ProjectCreateRequestModel
+            {
+                Name = "My Project"
+            };
+
+            _mockProjectRepository.Setup(r => r.AddAsync(It.IsAny<Project>()))
+                .ThrowsAsync(new Exception("DB failure"));
+
+            // Act
+            var result = await _projectService.CreateProjectAsync(request);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().Contain(e => e.Contains("DB failure"));
+        }
+
+
     }
 }
