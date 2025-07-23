@@ -59,12 +59,41 @@ To run the tests:
 ```bash
 dotnet test
 ```
+---
 
-### 📋 Swagger UI
+## ⚙️ GitHub Actions – CI/CD Workflow
+To ensure code quality and stability, this project uses GitHub Actions for automated Continuous Integration (CI).
+
+🧪 What It Does:
+Every time you push or create a pull request to the main or dev branches:
+
+✅ The project is built using dotnet build
+
+✅ All unit tests are executed using dotnet test
+
+❌ If the build or tests fail, the action stops and marks the check as failed
+
+✅ Successful builds help ensure merge safety and deploy readiness
+
+🔁 Triggered on:
+yaml
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+    
+🔒 This helps catch errors early and ensures that only valid, tested code is merged into key branches.
+
+---
+
+## 📋 Swagger UI
 Swagger is integrated for exploring and testing the API.
 
 - Visit: `https://localhost:7286/swagger` (when running locally)
 - Automatically generated based on controllers & models
+
+---
 
 ## 🐳 Docker & Hosting
 
@@ -85,6 +114,8 @@ docker run --env-file portfolio.api/.env -p 8080:8080 portfolio-api:latest
 Then access the API at:
 http://localhost:8080/swagger
 
+---
+
 ## 🚀 Technologies Used
 ASP.NET Core 8 (Web API)
 
@@ -97,6 +128,8 @@ Docker
 Render.com for hosting
 
 Vue (planned) for admin dashboard
+
+---
 
 ## 📂 Project Structure
 
@@ -112,6 +145,8 @@ PortfolioBackend/
 
 └── Portfolio.Tests/            # Unit tests with mocking
 
+---
+
 ## 🛡️ Security
 
 Dependency Injection for all services
@@ -119,6 +154,8 @@ Dependency Injection for all services
 Input validation
 
 Future authentication/authorization for admin API routes
+
+---
 
 ## 📬 Contact
 Want to know more or collaborate?
