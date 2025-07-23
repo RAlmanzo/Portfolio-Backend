@@ -60,9 +60,22 @@ To run the tests:
 dotnet test
 ```
 
+### 📋 Swagger UI
+Swagger is integrated for exploring and testing the API.
+
+- Visit: `https://localhost:7286/swagger` (when running locally)
+- Automatically generated based on controllers & models
+
 ## 🐳 Docker & Hosting
 
 The backend is containerized using Docker and deployed on Render.
+
+### 🧰 Requirements
+
+- [.NET 8 SDK](https://dotnet.microsoft.com/download)
+- [Docker](https://docs.docker.com/get-docker/) (for containerized runs)
+
+> 📌 Docker is optional for local development but required for production deployment.
 
 Run Locally with Docker
 ```bash
@@ -88,17 +101,22 @@ Vue (planned) for admin dashboard
 ## 📂 Project Structure
 
 PortfolioBackend/
+
 │
+
 ├── Portfolio.API/              # Web API (controllers, startup)
+
 ├── Portfolio.Core/             # Domain logic, interfaces, models
+
 ├── Portfolio.Infrastructure/   # Email service, future data access
+
 └── Portfolio.Tests/            # Unit tests with mocking
 
 ## 🛡️ Security
 
 Dependency Injection for all services
 
-Input validation for message sending
+Input validation
 
 Future authentication/authorization for admin API routes
 
