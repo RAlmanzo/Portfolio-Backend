@@ -58,21 +58,21 @@ To run the tests:
 
 ```bash
 dotnet test
-Tests cover core business logic and services, including the email service.
+```
 
-🐳 Docker & Hosting
+## 🐳 Docker & Hosting
+
 The backend is containerized using Docker and deployed on Render.
 
 Run Locally with Docker
-bash
-Kopiëren
-Bewerken
-docker build -t portfolio-backend .
-docker run -p 5000:80 portfolio-backend
+```bash
+docker build -t portfolio-api:latest -f Portfolio.Api/Dockerfile .
+docker run --env-file portfolio.api/.env -p 8080:8080 portfolio-api:latest
+```
 Then access the API at:
-http://localhost:5000
+http://localhost:8080/swagger
 
-🚀 Technologies Used
+## 🚀 Technologies Used
 ASP.NET Core 8 (Web API)
 
 Clean/Onion Architecture
@@ -85,28 +85,28 @@ Render.com for hosting
 
 Vue (planned) for admin dashboard
 
-📂 Project Structure
-bash
-Kopiëren
-Bewerken
+## 📂 Project Structure
+
 PortfolioBackend/
 │
 ├── Portfolio.API/              # Web API (controllers, startup)
 ├── Portfolio.Core/             # Domain logic, interfaces, models
 ├── Portfolio.Infrastructure/   # Email service, future data access
 └── Portfolio.Tests/            # Unit tests with mocking
-🛡️ Security
+
+## 🛡️ Security
+
 Dependency Injection for all services
 
 Input validation for message sending
 
 Future authentication/authorization for admin API routes
 
-📬 Contact
+## 📬 Contact
 Want to know more or collaborate?
 
-📧 Email: your.email@example.com
+📧 Email: ralmanzo@gmail.com
 
-🌐 Portfolio: your-portfolio.com
+🌐 Portfolio: https://ralmanzo.github.io/Portfolio/
 
-🐙 GitHub: your-username
+🐙 GitHub: https://github.com/RAlmanzo
