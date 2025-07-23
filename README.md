@@ -65,7 +65,6 @@ dotnet test
 To ensure code quality and stability, this project uses GitHub Actions for automated Continuous Integration (CI).
 
 🧪 What It Does:
-Every time you push or create a pull request to the main or dev branches:
 
 ✅ The project is built using dotnet build
 
@@ -75,13 +74,8 @@ Every time you push or create a pull request to the main or dev branches:
 
 ✅ Successful builds help ensure merge safety and deploy readiness
 
-🔁 Triggered on:
-yaml
-on:
-  push:
-    branches: [ main, dev ]
-  pull_request:
-    branches: [ main, dev ]
+🔁 Triggered on: push and pull_request
+
     
 🔒 This helps catch errors early and ensures that only valid, tested code is merged into key branches.
 
