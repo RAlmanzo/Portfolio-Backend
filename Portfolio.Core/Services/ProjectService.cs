@@ -1,4 +1,5 @@
-﻿using Portfolio.Core.Entities;
+﻿using Microsoft.Extensions.Logging;
+using Portfolio.Core.Entities;
 using Portfolio.Core.Interfaces.Repositories;
 using Portfolio.Core.Interfaces.Services;
 using Portfolio.Core.Services.Models;
@@ -14,10 +15,12 @@ namespace Portfolio.Core.Services
     public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
+        private readonly ILogger<ProjectService> _logger;
 
-        public ProjectService(IProjectRepository projectRepository)
+        public ProjectService(IProjectRepository projectRepository, ILogger<ProjectService> logger)
         {
             _projectRepository = projectRepository;
+            _logger = logger;
         }
 
         public async Task<ResultModel<Project>> GetByIdAsync(string id)
