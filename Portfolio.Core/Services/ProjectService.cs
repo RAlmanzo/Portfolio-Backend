@@ -51,7 +51,7 @@ namespace Portfolio.Core.Services
                 return new ResultModel<Project>
                 {
                     Success = false,
-                    Errors = [$"An error occurred while retrieving project. Please try again or contact support"]
+                    Errors = ["An error occurred while retrieving project. Please try again or contact support"]
                 };
             }
         }
@@ -94,10 +94,12 @@ namespace Portfolio.Core.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("An error occurred while creating project {Name} : {Message}", ProjectCreateRequestModel.Name, ex.Message);
+
                 return new ResultModel<Project>
                 {
                     Success = false,
-                    Errors = [$"An error occured while creating new project : {ex.Message}"]
+                    Errors = ["An error occured while creating new project. Please try again or contact support"]
                 };
             }
         }
