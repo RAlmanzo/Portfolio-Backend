@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Portfolio.Core.Entities;
 using Portfolio.Core.Interfaces.Repositories;
@@ -16,12 +17,14 @@ namespace Portfolio.Tests
     public class ProjectServiceTests
     {
         private readonly Mock<IProjectRepository> _mockProjectRepository;
+        private readonly Mock<ILogger<ProjectService>> _mockLogger;
         private readonly ProjectService _projectService;
 
         public ProjectServiceTests()
         {
             _mockProjectRepository = new Mock<IProjectRepository>();
-            _projectService = new ProjectService(_mockProjectRepository.Object);
+            _mockLogger = new Mock<ILogger<ProjectService>>();
+            _projectService = new ProjectService(_mockProjectRepository.Object, _mockLogger.Object);
         }
 
 
