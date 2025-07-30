@@ -1,4 +1,5 @@
-﻿using Portfolio.Core.Entities;
+﻿using Microsoft.Extensions.Logging;
+using Portfolio.Core.Entities;
 using Portfolio.Core.Interfaces.Repositories;
 using Portfolio.Core.Interfaces.Services;
 using Portfolio.Core.Services.Models;
@@ -14,10 +15,12 @@ namespace Portfolio.Core.Services
     public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
+        private readonly ILogger<ProjectService> _logger;
 
-        public ProjectService(IProjectRepository projectRepository)
+        public ProjectService(IProjectRepository projectRepository, ILogger<ProjectService> logger)
         {
             _projectRepository = projectRepository;
+            _logger = logger;
         }
 
         public async Task<ResultModel<Project>> GetByIdAsync(string id)
@@ -43,10 +46,12 @@ namespace Portfolio.Core.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("An error occurred while retrieving project with id {Id} : {Message}", id, ex.Message);
+
                 return new ResultModel<Project>
                 {
                     Success = false,
-                    Errors = [$"An error occurred while retrieving project: {ex.Message}"]
+                    Errors = ["An error occurred while retrieving project. Please try again or contact support"]
                 };
             }
         }
@@ -89,10 +94,12 @@ namespace Portfolio.Core.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("An error occurred while creating project {Name} : {Message}", ProjectCreateRequestModel.Name, ex.Message);
+
                 return new ResultModel<Project>
                 {
                     Success = false,
-                    Errors = [$"An error occured while creating new project : {ex.Message}"]
+                    Errors = ["An error occured while creating new project. Please try again or contact support"]
                 };
             }
         }
@@ -121,10 +128,12 @@ namespace Portfolio.Core.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("An error occurred while deleting project with id {Id} : {Message}", id, ex.Message);
+
                 return new ResultModel<Project>
                 {
                     Success = false,
-                    Errors = [$"An error occured while deleting project: {ex.Message}"],
+                    Errors = [$"An error occured while deleting project with id: {id}"],
                 };
             } 
         }
@@ -155,10 +164,12 @@ namespace Portfolio.Core.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("An error occurred while retrieving all projects: {Message}", ex.Message);
+
                 return new ResultModel<IEnumerable<Project>>
                 {
                     Success = false,
-                    Errors = [$"An error occured while retrieving all projects: {ex.Message}"],
+                    Errors = ["An error occured while retrieving all projects"],
                 };
             }
         }
@@ -203,10 +214,12 @@ namespace Portfolio.Core.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("An error occurred while updating project with id {Id}: {Message}",ProjectUpdateRequestModel.Id , ex.Message);
+
                 return new ResultModel<Project>
                 {
                     Success = false,
-                    Errors = [$"An error occured while updating project : {ex.Message}"]
+                    Errors = [$"An error occured while updating project with Id : {ProjectUpdateRequestModel.Id}"]
                 };
             }
         }
