@@ -78,7 +78,7 @@ namespace Portfolio.Tests
 
             // Assert
             result.Success.Should().BeFalse();
-            result.Errors.Should().ContainSingle(e => e.Contains("DB failure"));
+            result.Errors.Should().ContainSingle().Which.Should().Be("An error occurred while retrieving project. Please try again or contact support");
             result.Value.Should().BeNull();
         }
 
@@ -150,7 +150,7 @@ namespace Portfolio.Tests
             // Assert
             result.Success.Should().BeFalse();
             result.Value.Should().BeNull();
-            result.Errors.Should().Contain(e => e.Contains("DB failure"));
+            result.Errors.Should().ContainSingle().Which.Should().Be("An error occured while creating new project. Please try again or contact support");
         }
 
         [Fact]
@@ -208,7 +208,7 @@ namespace Portfolio.Tests
             // Assert
             result.Success.Should().BeFalse();
             result.Value.Should().BeNull();
-            result.Errors.Should().Contain(e => e.Contains("DB failure"));
+            result.Errors.Should().ContainSingle().Which.Should().Be($"An error occured while deleting project with id: {projectId}");
         }
 
         [Fact]
@@ -259,7 +259,7 @@ namespace Portfolio.Tests
             // Assert
             result.Success.Should().BeFalse();
             result.Value.Should().BeNull();
-            result.Errors.Should().Contain(e => e.Contains("DB failure"));
+            result.Errors.Should().ContainSingle().Which.Should().Be("An error occured while retrieving all projects");
         }
 
         [Fact]
@@ -344,7 +344,7 @@ namespace Portfolio.Tests
             // Assert
             result.Success.Should().BeFalse();
             result.Value.Should().BeNull();
-            result.Errors.Should().Contain(e => e.Contains("DB failure"));
+            result.Errors.Should().ContainSingle().Which.Should().Be($"An error occured while updating project with Id : {request.Id}");
         }
     }
 }
