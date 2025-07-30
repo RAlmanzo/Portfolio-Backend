@@ -214,10 +214,12 @@ namespace Portfolio.Core.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("An error occurred while updating project with id {Id}: {Message}",ProjectUpdateRequestModel.Id , ex.Message);
+
                 return new ResultModel<Project>
                 {
                     Success = false,
-                    Errors = [$"An error occured while updating project : {ex.Message}"]
+                    Errors = [$"An error occured while updating project with Id : {ProjectUpdateRequestModel.Id}"]
                 };
             }
         }
