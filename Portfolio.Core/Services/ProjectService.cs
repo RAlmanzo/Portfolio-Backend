@@ -164,10 +164,12 @@ namespace Portfolio.Core.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("An error occurred while retrieving all projects: {Message}", ex.Message);
+
                 return new ResultModel<IEnumerable<Project>>
                 {
                     Success = false,
-                    Errors = [$"An error occured while retrieving all projects: {ex.Message}"],
+                    Errors = ["An error occured while retrieving all projects"],
                 };
             }
         }
