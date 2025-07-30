@@ -128,10 +128,12 @@ namespace Portfolio.Core.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("An error occurred while deleting project with id {Id} : {Message}", id, ex.Message);
+
                 return new ResultModel<Project>
                 {
                     Success = false,
-                    Errors = [$"An error occured while deleting project: {ex.Message}"],
+                    Errors = [$"An error occured while deleting project with id: {id}"],
                 };
             } 
         }
