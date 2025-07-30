@@ -46,10 +46,12 @@ namespace Portfolio.Core.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("An error occurred while retrieving project with id {Id} : {Message}", id, ex.Message);
+
                 return new ResultModel<Project>
                 {
                     Success = false,
-                    Errors = [$"An error occurred while retrieving project: {ex.Message}"]
+                    Errors = [$"An error occurred while retrieving project. Please try again or contact support"]
                 };
             }
         }
