@@ -53,7 +53,7 @@ namespace Portfolio.Core.Services
                 return new ResultModel<Education>
                 {
                     Success = false,
-                    Errors = [$"An error occured while retrieving education with id: {id}"]
+                    Errors = [$"An error occured while retrieving education with id: {id}. Please try again or contact support"]
                 };
             }
         }
