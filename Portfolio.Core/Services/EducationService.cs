@@ -1,4 +1,5 @@
-﻿using Portfolio.Core.Entities;
+﻿using Microsoft.Extensions.Logging;
+using Portfolio.Core.Entities;
 using Portfolio.Core.Interfaces.Repositories;
 using Portfolio.Core.Interfaces.Services;
 using Portfolio.Core.Services.Models;
@@ -13,10 +14,12 @@ namespace Portfolio.Core.Services
     public class EducationService : IEducationService
     {
         private readonly IEducationRepository _educationRepository;
+        private readonly ILogger<EducationService> _logger;
 
-        public EducationService(IEducationRepository educationRepository)
+        public EducationService(IEducationRepository educationRepository, ILogger<EducationService> logger)
         {
             _educationRepository = educationRepository;
+            _logger = logger;
         }
 
         public async Task<ResultModel<Education>> GetByIdAsync(string id)
