@@ -63,5 +63,22 @@ namespace Portfolio.Tests
             result.Errors.Should().ContainSingle($"No education found with id: {educationId}");
             result.Value.Should().BeNull();
         }
+
+        [Fact]
+        public async Task GetByIdAsync_WithRepositoryThrowException_ReturnsError()
+        {
+            // Arrange
+            var educationId = "abc123";
+
+            _mockEducationRepository.Setup(r => r.GetByIdAsync(educationId)).ThrowsAsync(new Exception("DB failure"));
+
+            // Act
+            var result = await _educationService.GetByIdAsync(educationId);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Errors.Should().ContainSingle().Which.Should().Be($"An error occured while retrieving education with id: {educationId}. Please try again or contact support");
+            result.Value.Should().BeNull();
+        }
     }
 }
