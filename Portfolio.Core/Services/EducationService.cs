@@ -48,10 +48,12 @@ namespace Portfolio.Core.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("An error occurred while retrieving education with id {Id} : {Message}", id, ex.Message);
+
                 return new ResultModel<Education>
                 {
                     Success = false,
-                    Errors = [$"An error occured while retrieving education: {ex.Message}"]
+                    Errors = [$"An error occured while retrieving education with id: {id}"]
                 };
             }
         }
