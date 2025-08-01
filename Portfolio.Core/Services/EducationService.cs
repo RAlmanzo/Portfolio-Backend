@@ -121,10 +121,12 @@ namespace Portfolio.Core.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("An error occurred while retrieving all educations : {Message}", ex.Message);
+
                 return new ResultModel<IEnumerable<Education>>
                 {
                     Success = false,
-                    Errors = [$"An error occured while retrieving educations : {ex.Message}"]
+                    Errors = [$"An error occured while retrieving all educations. Please try again or contact support"]
                 };
             }
         }
