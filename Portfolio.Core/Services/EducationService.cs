@@ -1,4 +1,5 @@
-﻿using Portfolio.Core.Entities;
+﻿using Microsoft.Extensions.Logging;
+using Portfolio.Core.Entities;
 using Portfolio.Core.Interfaces.Repositories;
 using Portfolio.Core.Interfaces.Services;
 using Portfolio.Core.Services.Models;
@@ -13,10 +14,12 @@ namespace Portfolio.Core.Services
     public class EducationService : IEducationService
     {
         private readonly IEducationRepository _educationRepository;
+        private readonly ILogger<EducationService> _logger;
 
-        public EducationService(IEducationRepository educationRepository)
+        public EducationService(IEducationRepository educationRepository, ILogger<EducationService> logger)
         {
             _educationRepository = educationRepository;
+            _logger = logger;
         }
 
         public async Task<ResultModel<Education>> GetByIdAsync(string id)
@@ -45,10 +48,12 @@ namespace Portfolio.Core.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("An error occurred while retrieving education with id {Id} : {Message}", id, ex.Message);
+
                 return new ResultModel<Education>
                 {
                     Success = false,
-                    Errors = [$"An error occured while retrieving education: {ex.Message}"]
+                    Errors = [$"An error occured while retrieving education with id: {id}. Please try again or contact support"]
                 };
             }
         }
@@ -80,10 +85,12 @@ namespace Portfolio.Core.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("An error occurred while deleting education with id {Id} : {Message}", id, ex.Message);
+
                 return new ResultModel<Education>
                 {
                     Success = false,
-                    Errors = [$"An error occured while deleting education : {ex.Message}"]
+                    Errors = [$"An error occured while deleting education with id: {id}. Please try again or contact support"]
                 };
             }
         }
@@ -114,10 +121,12 @@ namespace Portfolio.Core.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("An error occurred while retrieving all educations : {Message}", ex.Message);
+
                 return new ResultModel<IEnumerable<Education>>
                 {
                     Success = false,
-                    Errors = [$"An error occured while retrieving educations : {ex.Message}"]
+                    Errors = [$"An error occured while retrieving all educations. Please try again or contact support"]
                 };
             }
         }
