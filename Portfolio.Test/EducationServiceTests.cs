@@ -46,5 +46,22 @@ namespace Portfolio.Tests
             result.Value.Should().NotBeNull();
             result.Errors.Should().BeNullOrEmpty();
         }
+
+        [Fact]
+        public async Task GetByIdAsync_WithNoneExistingEducationId_ReturnsError()
+        {
+            // Arrange
+            var educationId = "abc123";
+
+            _mockEducationRepository.Setup(r => r.GetByIdAsync(educationId)).ReturnsAsync((Education)null!);
+
+            // Act
+            var result = await _educationService.GetByIdAsync(educationId);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Errors.Should().ContainSingle($"No education found with id: {educationId}");
+            result.Value.Should().BeNull();
+        }
     }
 }
