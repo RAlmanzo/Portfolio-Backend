@@ -159,5 +159,20 @@ namespace Portfolio.Tests
             result.Value.Should().BeEquivalentTo(educations);
             result.Errors.Should().BeNullOrEmpty();
         }
+
+        [Fact]
+        public async Task GetAllAsync_WithNoneExistingEducations_ReturnsError()
+        {
+            // Arrange
+            _mockEducationRepository.Setup(r => r.GetAllAsync()).ReturnsAsync([]);
+
+            // Act
+            var result = await _educationService.GetAllAsync();
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().Contain("No educations found!");
+        }
     }
 }
