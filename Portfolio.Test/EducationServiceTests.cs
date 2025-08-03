@@ -174,5 +174,20 @@ namespace Portfolio.Tests
             result.Value.Should().BeNull();
             result.Errors.Should().Contain("No educations found!");
         }
+
+        [Fact]
+        public async Task GetAllAsync_WhithExceptionThrown_ReturnsError()
+        {
+            // Arrange
+            _mockEducationRepository.Setup(r => r.GetAllAsync()).ThrowsAsync(new Exception("DB failure"));
+
+            // Act
+            var result = await _educationService.GetAllAsync();
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().ContainSingle().Which.Should().Be($"An error occured while retrieving all educations. Please try again or contact support");
+        }
     }
 }
