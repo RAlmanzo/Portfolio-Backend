@@ -99,5 +99,22 @@ namespace Portfolio.Tests
             result.Value.Should().BeNull();
             result.Errors.Should().BeNullOrEmpty();
         }
+
+        [Fact]
+        public async Task DeleteEducationAsync_WhithInValidId_ReturnsError()
+        {
+            // Arrange
+            var educationId = "abc123";
+            _mockEducationRepository.Setup(r => r.GetByIdAsync(educationId))
+                          .ReturnsAsync((Education)null!);
+
+            // Act
+            var result = await _educationService.DeleteEducationAsync(educationId);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().Contain($"Education with id: {educationId}, does not exist!");
+        }
     }
 }
