@@ -80,5 +80,24 @@ namespace Portfolio.Tests
             result.Errors.Should().ContainSingle().Which.Should().Be($"An error occured while retrieving education with id: {educationId}. Please try again or contact support");
             result.Value.Should().BeNull();
         }
+
+        [Fact]
+        public async Task DeleteEducationAsync_WhithValidId_ReturnsSuccess()
+        {
+            // Arrange
+            var educationId = "abc123";
+            var existingEducation = new Education { Id = educationId, Degree = "Test degree" };
+
+            _mockEducationRepository.Setup(r => r.GetByIdAsync(educationId)).ReturnsAsync(existingEducation);
+            _mockEducationRepository.Setup(r => r.DeleteAsync(existingEducation)).Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _educationService.DeleteEducationAsync(educationId);
+
+            // Assert
+            result.Success.Should().BeTrue();
+            result.Value.Should().BeNull();
+            result.Errors.Should().BeNullOrEmpty();
+        }
     }
 }
