@@ -116,5 +116,27 @@ namespace Portfolio.Tests
             result.Value.Should().BeNull();
             result.Errors.Should().Contain($"Education with id: {educationId}, does not exist!");
         }
+
+        [Fact]
+        public async Task DeleteEducationAsync_WhithExceptionThrown_ReturnsError()
+        {
+            // Arrange
+            var educationId = "abc123";
+            var education = new Education { Id = educationId };
+
+            _mockEducationRepository.Setup(r => r.GetByIdAsync(educationId))
+                                  .ReturnsAsync(education);
+
+            _mockEducationRepository.Setup(r => r.DeleteAsync(education))
+                                  .ThrowsAsync(new Exception("DB failure"));
+
+            // Act
+            var result = await _educationService.DeleteEducationAsync(educationId);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().ContainSingle().Which.Should().Be($"An error occured while deleting education with id: {educationId}. Please try again or contact support");
+        }
     }
 }
