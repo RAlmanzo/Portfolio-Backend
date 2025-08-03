@@ -138,5 +138,26 @@ namespace Portfolio.Tests
             result.Value.Should().BeNull();
             result.Errors.Should().ContainSingle().Which.Should().Be($"An error occured while deleting education with id: {educationId}. Please try again or contact support");
         }
+
+        [Fact]
+        public async Task GetAllAsync_WithExistingEducations_ReturnsEducations()
+        {
+            // Arrange
+            var educations = new List<Education>
+            {
+                new() { Id = "1", Degree = "Test degree 1" },
+                new() { Id = "2", Degree = "Test degree 2" }
+            };
+
+            _mockEducationRepository.Setup(r => r.GetAllAsync()).ReturnsAsync(educations);
+
+            // Act
+            var result = await _educationService.GetAllAsync();
+
+            // Assert
+            result.Success.Should().BeTrue();
+            result.Value.Should().BeEquivalentTo(educations);
+            result.Errors.Should().BeNullOrEmpty();
+        }
     }
 }
