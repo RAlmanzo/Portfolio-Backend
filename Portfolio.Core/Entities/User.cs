@@ -17,9 +17,9 @@ namespace Portfolio.Core.Entities
         public string Nationality { get; set; } = string.Empty;
         public string DriverLicense { get; set; } = string.Empty;
         public string Residence { get; set; } = string.Empty;
-        public string GitHub { get; set; } = string.Empty;
-        public string Linkedin { get; set; } = string.Empty;
-        public string ResumeId { get; set; } = string.Empty;
+        public string? GitHub { get; set; }
+        public string? Linkedin { get; set; }
+        public string? ResumeId { get; set; }
         public ICollection<string> Images { get; set; } = [];
         public ICollection<Project> Projects { get; set; } = [];
         public ICollection<string> Languages { get; set; } = [];
