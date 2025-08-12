@@ -13,5 +13,6 @@ namespace Portfolio.Core.Entities
         public required DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public required string Position { get; set; }
+        public string? Information { get; set; }
     }
 }
