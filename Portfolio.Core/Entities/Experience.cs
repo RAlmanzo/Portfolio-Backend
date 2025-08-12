@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Portfolio.Core.Entities
 {
-    public class Experience
+    public class Experience : BaseEntity
     {
         public required string Location { get; set; }
         public required string Company { get; set; }
