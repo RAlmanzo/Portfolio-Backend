@@ -1,4 +1,6 @@
-﻿using Portfolio.Core.Interfaces.Repositories;
+﻿using Portfolio.Core.Entities;
+using Portfolio.Core.Interfaces.Repositories;
+using Portfolio.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Portfolio.Infrastructure.Repositories
 {
-    public class ExperienceRepository
+    public class ExperienceRepository(MongoDbContext context) : BaseRepository<Experience>(context), IExperienceRepository
     {
     }
 }
