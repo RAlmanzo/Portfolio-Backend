@@ -1,4 +1,5 @@
 ﻿using Portfolio.Core.Entities;
+using Portfolio.Core.Interfaces.Repositories;
 using Portfolio.Core.Interfaces.Services;
 using Portfolio.Core.Services.Models;
 using System;
@@ -11,6 +12,18 @@ namespace Portfolio.Core.Services
 {
     public class ExperienceService : IExperienceService
     {
+        private readonly IExperienceRepository _experienceRepository;
+
+        public ExperienceService(IExperienceRepository experienceRepository)
+        {
+            _experienceRepository = experienceRepository;
+        }
+
+        public Task<ResultModel<Experience>> GetByIdAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<ResultModel<Experience>> CreateExperienceAsync(ExperienceCreateRequestModel ExperienceCreateRequestModel)
         {
             throw new NotImplementedException();
@@ -22,11 +35,6 @@ namespace Portfolio.Core.Services
         }
 
         public Task<ResultModel<IEnumerable<Experience>>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ResultModel<Experience>> GetByIdAsync(string id)
         {
             throw new NotImplementedException();
         }
