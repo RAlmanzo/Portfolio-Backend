@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Portfolio.Core.Entities;
+using Portfolio.Core.Interfaces.Services;
+using Portfolio.Core.Services.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +9,31 @@ using System.Threading.Tasks;
 
 namespace Portfolio.Core.Services
 {
-    public class ExperienceService
+    public class ExperienceService : IExperienceService
     {
+        public Task<ResultModel<Experience>> CreateExperienceAsync(ExperienceCreateRequestModel ExperienceCreateRequestModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResultModel<Experience>> DeleteExperienceAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResultModel<IEnumerable<Experience>>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResultModel<Experience>> GetByIdAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResultModel<Experience>> UpdateExperienceAsync(ExperienceUpdateRequestModel ExperienceUpdateRequestModel)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
