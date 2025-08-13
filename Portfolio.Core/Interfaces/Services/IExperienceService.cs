@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Portfolio.Core.Interfaces.Services
 {
-    public interface IEperienceService
+    public interface IExperienceService
     {
         Task<ResultModel<Experience>> GetByIdAsync(string id);
         Task<ResultModel<IEnumerable<Experience>>> GetAllAsync();

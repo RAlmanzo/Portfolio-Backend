@@ -1,0 +1,79 @@
+﻿using Microsoft.Extensions.Logging;
+using Portfolio.Core.Entities;
+using Portfolio.Core.Interfaces.Repositories;
+using Portfolio.Core.Interfaces.Services;
+using Portfolio.Core.Services.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Portfolio.Core.Services
+{
+    public class ExperienceService : IExperienceService
+    {
+        private readonly IExperienceRepository _experienceRepository;
+        private readonly ILogger<ExperienceService> _logger;
+
+        public ExperienceService(IExperienceRepository experienceRepository, ILogger<ExperienceService> logger)
+        {
+            _experienceRepository = experienceRepository;
+            _logger = logger;
+        }
+
+        public async Task<ResultModel<Experience>> GetByIdAsync(string id)
+        {
+            try
+            {
+                //get experience
+                var experience = await _experienceRepository.GetByIdAsync(id);
+                //check if exists
+                if (experience == null)
+                {
+                    return new ResultModel<Experience>
+                    {
+                        Success = false,
+                        Errors = [$"No experience found with id: {id}"],
+                    };
+                }
+                //if exists
+                return new ResultModel<Experience>
+                {
+                    Success = true,
+                    Value = experience,
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("An error occurred while retrieving experience with id {Id} : {Message}", id, ex.Message);
+
+                return new ResultModel<Experience>
+                {
+                    Success = false,
+                    Errors = [$"An error occurred while retrieving experience with id: {id}. Please try again or contact support"]
+                };
+            }
+        }
+
+        public Task<ResultModel<Experience>> CreateExperienceAsync(ExperienceCreateRequestModel ExperienceCreateRequestModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResultModel<Experience>> DeleteExperienceAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResultModel<IEnumerable<Experience>>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResultModel<Experience>> UpdateExperienceAsync(ExperienceUpdateRequestModel ExperienceUpdateRequestModel)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
