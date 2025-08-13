@@ -22,9 +22,38 @@ namespace Portfolio.Core.Services
             _logger = logger;
         }
 
-        public Task<ResultModel<Experience>> GetByIdAsync(string id)
+        public async Task<ResultModel<Experience>> GetByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //get experience
+                var experience = await _experienceRepository.GetByIdAsync(id);
+                //check if exists
+                if (experience == null)
+                {
+                    return new ResultModel<Experience>
+                    {
+                        Success = false,
+                        Errors = [$"No experience found with id: {id}"],
+                    };
+                }
+                //if exists
+                return new ResultModel<Experience>
+                {
+                    Success = true,
+                    Value = experience,
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("An error occurred while retrieving experience with id {Id} : {Message}", id, ex.Message);
+
+                return new ResultModel<Experience>
+                {
+                    Success = false,
+                    Errors = [$"An error occurred while retrieving experience with id: {id}. Please try again or contact support"]
+                };
+            }
         }
 
         public Task<ResultModel<Experience>> CreateExperienceAsync(ExperienceCreateRequestModel ExperienceCreateRequestModel)
