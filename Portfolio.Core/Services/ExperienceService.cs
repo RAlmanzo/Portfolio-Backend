@@ -1,4 +1,5 @@
-﻿using Portfolio.Core.Entities;
+﻿using Microsoft.Extensions.Logging;
+using Portfolio.Core.Entities;
 using Portfolio.Core.Interfaces.Repositories;
 using Portfolio.Core.Interfaces.Services;
 using Portfolio.Core.Services.Models;
@@ -13,10 +14,12 @@ namespace Portfolio.Core.Services
     public class ExperienceService : IExperienceService
     {
         private readonly IExperienceRepository _experienceRepository;
+        private readonly ILogger<ExperienceService> _logger;
 
-        public ExperienceService(IExperienceRepository experienceRepository)
+        public ExperienceService(IExperienceRepository experienceRepository, ILogger<ExperienceService> logger)
         {
             _experienceRepository = experienceRepository;
+            _logger = logger;
         }
 
         public Task<ResultModel<Experience>> GetByIdAsync(string id)
