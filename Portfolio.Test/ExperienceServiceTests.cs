@@ -49,5 +49,22 @@ namespace Portfolio.Tests
             result.Value.Should().NotBeNull();
             result.Errors.Should().BeNullOrEmpty();
         }
+
+        [Fact]
+        public async Task GetByIdAsync_WithNonExistingExperienceId_ReturnsError()
+        {
+            // Arrange
+            var experienceId = "abc123";
+
+            _mockExperienceRepository.Setup(r => r.GetByIdAsync(experienceId)).ReturnsAsync((Experience)null!);
+
+            // Act
+            var result = await _experienceService.GetByIdAsync(experienceId);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().ContainSingle($"No experience found with id: {experienceId}");
+        }
     }
 }
