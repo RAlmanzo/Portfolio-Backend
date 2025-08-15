@@ -119,5 +119,20 @@ namespace Portfolio.Tests
             result.Value.Should().BeNull();
             result.Errors.Should().ContainSingle("No experiences found.");
         }
+
+        [Fact]
+        public async Task GetAllAsync_WithRepositoryThrowsException_ReturnsError()
+        {
+            // Arrange
+            _mockExperienceRepository.Setup(repo => repo.GetAllAsync()).ThrowsAsync(new Exception("Database error"));
+
+            // Act
+            var result = await _experienceService.GetAllAsync();
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Errors.Should().ContainSingle("An error occurred while retrieving experiences. Please try again or contact support");
+            result.Value.Should().BeNull();
+        }
     }
 }
