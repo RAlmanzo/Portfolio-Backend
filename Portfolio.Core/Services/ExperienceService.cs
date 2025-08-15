@@ -58,7 +58,38 @@ namespace Portfolio.Core.Services
 
         public Task<ResultModel<Experience>> CreateExperienceAsync(ExperienceCreateRequestModel ExperienceCreateRequestModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //create experience
+                var experience = new Experience
+                {
+                    Location = ExperienceCreateRequestModel.Location,                  
+                    Company = ExperienceCreateRequestModel.Company,
+                    StartDate = ExperienceCreateRequestModel.StartDate,
+                    EndDate = ExperienceCreateRequestModel.EndDate,
+                    Position = ExperienceCreateRequestModel.Position,
+                    Information = ExperienceCreateRequestModel.Information,
+                };
+
+                //save experience
+                _experienceRepository.AddAsync(experience);
+
+                return Task.FromResult(new ResultModel<Experience>
+                {
+                    Success = true,
+                    Value = experience,
+                });
+            }
+            catch (Exception ex)
+            {                
+                _logger.LogError("An error occurred while creating experience: {Message}", ex.Message);
+                
+                return Task.FromResult(new ResultModel<Experience>
+                {
+                    Success = false,
+                    Errors = ["An error occurred while creating the experience. Please try again or contact support"]
+                });
+            }
         }
 
         public async Task<ResultModel<Experience>> DeleteExperienceAsync(string id)
