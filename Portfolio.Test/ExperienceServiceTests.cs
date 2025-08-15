@@ -126,6 +126,32 @@ namespace Portfolio.Tests
         }
 
         [Fact]
+        public async Task DeleteExperienceAsync_WithRepositoryThrowsException_ReturnsError()
+        {
+            // Arrange
+            var experienceId = "abc123";
+            var experienceToDelete = new Experience 
+            { 
+                Id = experienceId, 
+                Position = "Developer", 
+                Company = "Company A", 
+                Location = "Location A", 
+                StartDate = DateTime.Now 
+            };
+
+            _mockExperienceRepository.Setup(repo => repo.GetByIdAsync(experienceId)).ReturnsAsync(experienceToDelete);
+            _mockExperienceRepository.Setup(repo => repo.DeleteAsync(experienceToDelete)).ThrowsAsync(new Exception("Database error"));
+            
+            // Act
+            var result = await _experienceService.DeleteExperienceAsync(experienceId);
+            
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Errors.Should().ContainSingle($"An error occurred while deleting experience with id: {experienceId}. Please try again or contact support");
+            result.Value.Should().BeNull();
+        }
+
+        [Fact]
         public async Task GetallAsync_WithExistingExperiences_ReturnsExperiences()
         {
             // Arrange
