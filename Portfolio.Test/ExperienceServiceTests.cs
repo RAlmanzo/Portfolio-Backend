@@ -73,13 +73,65 @@ namespace Portfolio.Tests
             // Arrange
             var experienceId = "abc123";
             _mockExperienceRepository.Setup(r => r.GetByIdAsync(experienceId)).ThrowsAsync(new Exception("Database error"));
-            
+
             // Act
             var result = await _experienceService.GetByIdAsync(experienceId);
-            
+
             // Assert
             result.Success.Should().BeFalse();
             result.Errors.Should().ContainSingle($"An error occurred while retrieving experience with id: {experienceId}. Please try again or contact support");
+            result.Value.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetallAsync_WithExistingExperiences_ReturnsExperiences()
+        {
+            // Arrange
+            var experiences = new List<Experience>
+            {
+                new() { Id = "1", Position = "Developer", Company = "Company A", Location = "Location A", StartDate = DateTime.Now },
+                new() { Id = "2", Position = "Tester", Company = "Company B", Location = "Location B", StartDate = DateTime.Now }
+            };
+
+            _mockExperienceRepository.Setup(repo => repo.GetAllAsync()).ReturnsAsync(experiences);
+
+            // Act
+            var result = await _experienceService.GetAllAsync();
+
+            // Assert
+            result.Success.Should().BeTrue();
+            result.Value.Should().NotBeNullOrEmpty();
+            result.Value.Should().BeEquivalentTo(experiences);
+            result.Errors.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WithNoneExistingExperiences_ReturnsError()
+        {
+            // Arrange
+            _mockExperienceRepository.Setup(repo => repo.GetAllAsync()).ReturnsAsync([]);
+
+            // Act
+            var result = await _experienceService.GetAllAsync();
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().ContainSingle("No experiences found.");
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WithRepositoryThrowsException_ReturnsError()
+        {
+            // Arrange
+            _mockExperienceRepository.Setup(repo => repo.GetAllAsync()).ThrowsAsync(new Exception("Database error"));
+
+            // Act
+            var result = await _experienceService.GetAllAsync();
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Errors.Should().ContainSingle("An error occurred while retrieving experiences. Please try again or contact support");
             result.Value.Should().BeNull();
         }
     }

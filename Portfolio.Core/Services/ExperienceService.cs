@@ -66,9 +66,40 @@ namespace Portfolio.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task<ResultModel<IEnumerable<Experience>>> GetAllAsync()
+        public async Task<ResultModel<IEnumerable<Experience>>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                //get all experiences
+                var experiences = await _experienceRepository.GetAllAsync();
+
+                //if no experiences found
+                if (!experiences.Any())
+                {
+                    return new ResultModel<IEnumerable<Experience>>
+                    {
+                        Success = false,
+                        Errors = ["No experiences found."],
+                    };
+                }
+
+                //if exists
+                return new ResultModel<IEnumerable<Experience>>
+                {
+                    Success = true,
+                    Value = experiences,
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("An error occurred while retrieving experiences: {Message}", ex.Message);
+
+                return new ResultModel<IEnumerable<Experience>>
+                {
+                    Success = false,
+                    Errors = ["An error occurred while retrieving experiences. Please try again or contact support"]
+                };
+            }
         }
 
         public Task<ResultModel<Experience>> UpdateExperienceAsync(ExperienceUpdateRequestModel ExperienceUpdateRequestModel)
