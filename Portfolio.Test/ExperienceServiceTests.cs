@@ -110,6 +110,22 @@ namespace Portfolio.Tests
         }
 
         [Fact]
+        public async Task DeleteExperienceAsync_WithInvalidId_ReturnsError()
+        {
+            // Arrange
+            var experienceId = "abc123";
+            _mockExperienceRepository.Setup(repo => repo.GetByIdAsync(experienceId)).ReturnsAsync((Experience)null!);
+            
+            // Act
+            var result = await _experienceService.DeleteExperienceAsync(experienceId);
+            
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().Contain($"No experience found with id: {experienceId}");
+        }
+
+        [Fact]
         public async Task GetallAsync_WithExistingExperiences_ReturnsExperiences()
         {
             // Arrange
