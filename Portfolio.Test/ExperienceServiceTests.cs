@@ -84,6 +84,32 @@ namespace Portfolio.Tests
         }
 
         [Fact]
+        public async Task DeleteExperienceAsync_WithValidId_ReturnsSuccess()
+        {
+            // Arrange
+            var experienceId = "abc123";
+            var experienceToDelete = new Experience 
+            { 
+                Id = experienceId, 
+                Position = "Developer", 
+                Company = "Company A", 
+                Location = "Location A", 
+                StartDate = DateTime.Now 
+            };
+
+            _mockExperienceRepository.Setup(repo => repo.GetByIdAsync(experienceId)).ReturnsAsync(experienceToDelete);
+            _mockExperienceRepository.Setup(repo => repo.DeleteAsync(experienceToDelete)).Returns(Task.CompletedTask);
+            
+            // Act
+            var result = await _experienceService.DeleteExperienceAsync(experienceId);
+            
+            // Assert
+            result.Success.Should().BeTrue();
+            result.Value.Should().BeNull();
+            result.Errors.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
         public async Task GetallAsync_WithExistingExperiences_ReturnsExperiences()
         {
             // Arrange
