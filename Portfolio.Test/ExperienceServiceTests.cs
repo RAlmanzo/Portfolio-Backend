@@ -73,10 +73,10 @@ namespace Portfolio.Tests
             // Arrange
             var experienceId = "abc123";
             _mockExperienceRepository.Setup(r => r.GetByIdAsync(experienceId)).ThrowsAsync(new Exception("Database error"));
-            
+
             // Act
             var result = await _experienceService.GetByIdAsync(experienceId);
-            
+
             // Assert
             result.Success.Should().BeFalse();
             result.Errors.Should().ContainSingle($"An error occurred while retrieving experience with id: {experienceId}. Please try again or contact support");
@@ -103,6 +103,21 @@ namespace Portfolio.Tests
             result.Value.Should().NotBeNullOrEmpty();
             result.Value.Should().BeEquivalentTo(experiences);
             result.Errors.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WithNoneExistingExperiences_ReturnsError()
+        {
+            // Arrange
+            _mockExperienceRepository.Setup(repo => repo.GetAllAsync()).ReturnsAsync([]);
+
+            // Act
+            var result = await _experienceService.GetAllAsync();
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().ContainSingle("No experiences found.");
         }
     }
 }
