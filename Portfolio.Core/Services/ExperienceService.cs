@@ -61,9 +61,39 @@ namespace Portfolio.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task<ResultModel<Experience>> DeleteExperienceAsync(string id)
+        public async Task<ResultModel<Experience>> DeleteExperienceAsync(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //get experience
+                var experience = await _experienceRepository.GetByIdAsync(id);
+
+                //check if exists
+                if (experience == null)
+                {
+                    return new ResultModel<Experience>
+                    {
+                        Success = false,
+                        Errors = [$"No experience found with id: {id}"],
+                    };
+                }
+
+                //delete experience
+                await _experienceRepository.DeleteAsync(experience);
+
+                //return success
+                return new ResultModel<Experience> { Success = true, };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("An error occurred while deleting experience with id {Id} : {Message}", id, ex.Message);
+
+                return new ResultModel<Experience>
+                {
+                    Success = false,
+                    Errors = [$"An error occurred while deleting the experience with id: {id}. Please try again or contact support"]
+                };
+            }
         }
 
         public async Task<ResultModel<IEnumerable<Experience>>> GetAllAsync()
