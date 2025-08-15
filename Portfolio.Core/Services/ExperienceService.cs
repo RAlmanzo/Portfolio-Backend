@@ -56,7 +56,7 @@ namespace Portfolio.Core.Services
             }
         }
 
-        public Task<ResultModel<Experience>> CreateExperienceAsync(ExperienceCreateRequestModel ExperienceCreateRequestModel)
+        public async Task<ResultModel<Experience>> CreateExperienceAsync(ExperienceCreateRequestModel ExperienceCreateRequestModel)
         {
             try
             {
@@ -72,23 +72,23 @@ namespace Portfolio.Core.Services
                 };
 
                 //save experience
-                _experienceRepository.AddAsync(experience);
+                await _experienceRepository.AddAsync(experience);
 
-                return Task.FromResult(new ResultModel<Experience>
+                return new ResultModel<Experience>
                 {
                     Success = true,
                     Value = experience,
-                });
+                };
             }
             catch (Exception ex)
             {                
                 _logger.LogError("An error occurred while creating experience: {Message}", ex.Message);
                 
-                return Task.FromResult(new ResultModel<Experience>
+                return new ResultModel<Experience>
                 {
                     Success = false,
                     Errors = ["An error occurred while creating the experience. Please try again or contact support"]
-                });
+                };
             }
         }
 
