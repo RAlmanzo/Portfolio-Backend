@@ -111,6 +111,30 @@ namespace Portfolio.Tests
         }
 
         [Fact]
+        public async Task CreateExperienceAsync_WithInvalidInput_ReturnsError()
+        {
+            // Arrange
+            var request = new ExperienceCreateRequestModel
+            {
+                Position = "Software Engineer",
+                Company = "Tech Corp",
+                Location = "New York, NY",
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now,
+            };
+
+            _mockExperienceRepository.Setup(r => r.AddAsync(It.IsAny<Experience>())).ReturnsAsync(false);
+
+            // Act
+            var result = await _experienceService.CreateExperienceAsync(request);
+            
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().Contain("Could not create new experience");
+        }
+
+        [Fact]
         public async Task DeleteExperienceAsync_WithValidId_ReturnsSuccess()
         {
             // Arrange
