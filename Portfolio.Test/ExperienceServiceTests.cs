@@ -4,6 +4,7 @@ using Moq;
 using Portfolio.Core.Entities;
 using Portfolio.Core.Interfaces.Repositories;
 using Portfolio.Core.Services;
+using Portfolio.Core.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,6 +81,80 @@ namespace Portfolio.Tests
             // Assert
             result.Success.Should().BeFalse();
             result.Errors.Should().ContainSingle($"An error occurred while retrieving experience with id: {experienceId}. Please try again or contact support");
+            result.Value.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task CreateExperienceAsync_WithValidInput_ReturnsSuccess()
+        {
+            // Arrange
+            var request = new ExperienceCreateRequestModel
+            {
+                Position = "Software Engineer",
+                Company = "Tech Corp",
+                Location = "New York, NY",
+                StartDate = new DateTime(2020, 1, 1),
+                EndDate = new DateTime(2022, 12, 31),
+                Information = "Worked on various projects"
+            };
+
+            _mockExperienceRepository.Setup(r => r.AddAsync(It.IsAny<Experience>())).ReturnsAsync(true);
+
+            // Act
+            var result = await _experienceService.CreateExperienceAsync(request);
+
+            // Assert
+            result.Success.Should().BeTrue();
+            result.Value.Should().NotBeNull();
+            result.Value.Should().BeEquivalentTo(request);
+            result.Errors.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task CreateExperienceAsync_WithInvalidInput_ReturnsError()
+        {
+            // Arrange
+            var request = new ExperienceCreateRequestModel
+            {
+                Position = "Software Engineer",
+                Company = "Tech Corp",
+                Location = "New York, NY",
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now,
+            };
+
+            _mockExperienceRepository.Setup(r => r.AddAsync(It.IsAny<Experience>())).ReturnsAsync(false);
+
+            // Act
+            var result = await _experienceService.CreateExperienceAsync(request);
+            
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().Contain("Could not create new experience");
+        }
+
+        [Fact]
+        public async Task CreateExperienceAsync_WithRepositoryThrowsException_ReturnsError()
+        {
+            // Arrange
+            var request = new ExperienceCreateRequestModel
+            {
+                Position = "Software Engineer",
+                Company = "Tech Corp",
+                Location = "New York, NY",
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now,
+            };
+            
+            _mockExperienceRepository.Setup(r => r.AddAsync(It.IsAny<Experience>())).ThrowsAsync(new Exception("Database error"));
+            
+            // Act
+            var result = await _experienceService.CreateExperienceAsync(request);
+            
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Errors.Should().ContainSingle("An error occurred while creating experience. Please try again or contact support");
             result.Value.Should().BeNull();
         }
 
