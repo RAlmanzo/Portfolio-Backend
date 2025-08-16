@@ -135,6 +135,30 @@ namespace Portfolio.Tests
         }
 
         [Fact]
+        public async Task CreateExperienceAsync_WithRepositoryThrowsException_ReturnsError()
+        {
+            // Arrange
+            var request = new ExperienceCreateRequestModel
+            {
+                Position = "Software Engineer",
+                Company = "Tech Corp",
+                Location = "New York, NY",
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now,
+            };
+            
+            _mockExperienceRepository.Setup(r => r.AddAsync(It.IsAny<Experience>())).ThrowsAsync(new Exception("Database error"));
+            
+            // Act
+            var result = await _experienceService.CreateExperienceAsync(request);
+            
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Errors.Should().ContainSingle("An error occurred while creating experience. Please try again or contact support");
+            result.Value.Should().BeNull();
+        }
+
+        [Fact]
         public async Task DeleteExperienceAsync_WithValidId_ReturnsSuccess()
         {
             // Arrange
