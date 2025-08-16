@@ -72,7 +72,16 @@ namespace Portfolio.Core.Services
                 };
 
                 //save experience
-                await _experienceRepository.AddAsync(experience);
+                var result = await _experienceRepository.AddAsync(experience);
+
+                if (!result)
+                {
+                    return new ResultModel<Experience>
+                    {
+                        Success = false,
+                        Errors = ["Could not create new experience"],
+                    };
+                }
 
                 return new ResultModel<Experience>
                 {
