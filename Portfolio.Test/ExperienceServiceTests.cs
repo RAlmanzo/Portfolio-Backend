@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Portfolio.Core.Entities;
 using Portfolio.Core.Interfaces.Repositories;
+using Portfolio.Core.Interfaces.Services;
 using Portfolio.Core.Services;
 using Portfolio.Core.Services.Models;
 using System;
@@ -276,6 +277,94 @@ namespace Portfolio.Tests
             result.Success.Should().BeFalse();
             result.Errors.Should().ContainSingle("An error occurred while retrieving experiences. Please try again or contact support");
             result.Value.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task UpdateExperienceAsync_WhithExistingExperience_ReturnsSuccess()
+        {
+            // Arrange
+            var request = new ExperienceUpdateRequestModel
+            {
+                Id = "abc123",
+                Location = "Updated Location",
+                Company = "Updated Company",
+                StartDate = DateTime.Now.AddYears(-1),
+                EndDate = DateTime.Now,
+                Position = "Updated Position",
+                Information = "Updated Information"
+            };
+
+            var existingExperience = new Experience { Id = request.Id, Location = "Old Location", Company = "Old Company", StartDate = DateTime.Now.AddYears(-2), EndDate = DateTime.Now.AddYears(-1), Position = "Old Position", Information = "Old Information" };
+
+            _mockExperienceRepository.Setup(r => r.GetByIdAsync(request.Id))
+                                  .ReturnsAsync(existingExperience);
+            _mockExperienceRepository.Setup(r => r.UpdateAsync(It.IsAny<Experience>()))
+                                  .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _experienceService.UpdateExperienceAsync(request);
+
+            // Assert
+            result.Success.Should().BeTrue();
+            result.Value.Should().NotBeNull();
+            result.Value.Should().BeEquivalentTo(request, options => options
+                .ComparingByMembers<ExperienceUpdateRequestModel>());
+            result.Errors.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task UpdateExperienceAsync_WhenExperienceNotFound_ReturnsError()
+        {
+            // Arrange
+            var request = new ExperienceUpdateRequestModel
+            {
+                Id = "abc123",
+                Location = "Updated Location",
+                Company = "Updated Company",
+                StartDate = DateTime.Now.AddYears(-1),
+                EndDate = DateTime.Now,
+                Position = "Updated Position",
+                Information = "Updated Information"
+            };
+
+            _mockExperienceRepository.Setup(r => r.GetByIdAsync(request.Id)).ReturnsAsync((Experience)null!);
+
+            // Act
+            var result = await _experienceService.UpdateExperienceAsync(request);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().Contain($"No experience found with id: {request.Id}");
+        }
+
+        [Fact]
+        public async Task UpdateExperienceAsync_WhithExceptionThrown_ReturnsError()
+        {
+            // Arrange
+            var request = new ExperienceUpdateRequestModel
+            {
+                Id = "abc123",
+                Location = "Updated Location",
+                Company = "Updated Company",
+                StartDate = DateTime.Now.AddYears(-1),
+                EndDate = DateTime.Now,
+                Position = "Updated Position",
+                Information = "Updated Information"
+            };
+
+            var existingExperience = new Experience { Id = request.Id, Company = "Old Company", Location = "Old Location", StartDate = DateTime.Now.AddYears(-2), EndDate = DateTime.Now.AddYears(-1), Position = "Old Position", Information = "Old Information" };
+
+            _mockExperienceRepository.Setup(r => r.GetByIdAsync(request.Id)).ReturnsAsync(existingExperience);
+            _mockExperienceRepository.Setup(r => r.UpdateAsync(It.IsAny<Experience>())).ThrowsAsync(new Exception("DB failure"));
+
+            // Act
+            var result = await _experienceService.UpdateExperienceAsync(request);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().ContainSingle().Which.Should().Be($"An error occurred while updating experience with id: {request.Id}. Please try again or contact support");
         }
     }
 }
