@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Portfolio.Core.Entities;
 using Portfolio.Core.Interfaces.Repositories;
+using Portfolio.Core.Interfaces.Services;
 using Portfolio.Core.Services;
 using Portfolio.Core.Services.Models;
 using System;
@@ -276,6 +277,39 @@ namespace Portfolio.Tests
             result.Success.Should().BeFalse();
             result.Errors.Should().ContainSingle("An error occurred while retrieving experiences. Please try again or contact support");
             result.Value.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task UpdateExperienceAsync_WhithExistingExperience_ReturnsSuccess()
+        {
+            // Arrange
+            var request = new ExperienceUpdateRequestModel
+            {
+                Id = "abc123",
+                Location = "Updated Location",
+                Company = "Updated Company",
+                StartDate = DateTime.Now.AddYears(-1),
+                EndDate = DateTime.Now,
+                Position = "Updated Position",
+                Information = "Updated Information"
+            };
+
+            var existingExperience = new Experience { Id = request.Id, Location = "Old Location", Company = "Old Company", StartDate = DateTime.Now.AddYears(-2), EndDate = DateTime.Now.AddYears(-1), Position = "Old Position", Information = "Old Information" };
+
+            _mockExperienceRepository.Setup(r => r.GetByIdAsync(request.Id))
+                                  .ReturnsAsync(existingExperience);
+            _mockExperienceRepository.Setup(r => r.UpdateAsync(It.IsAny<Experience>()))
+                                  .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _experienceService.UpdateExperienceAsync(request);
+
+            // Assert
+            result.Success.Should().BeTrue();
+            result.Value.Should().NotBeNull();
+            result.Value.Should().BeEquivalentTo(request, options => options
+                .ComparingByMembers<ExperienceUpdateRequestModel>());
+            result.Errors.Should().BeNullOrEmpty();
         }
     }
 }
