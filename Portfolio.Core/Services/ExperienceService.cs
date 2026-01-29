@@ -172,9 +172,48 @@ namespace Portfolio.Core.Services
             }
         }
 
-        public Task<ResultModel<Experience>> UpdateExperienceAsync(ExperienceUpdateRequestModel ExperienceUpdateRequestModel)
+        public async Task<ResultModel<Experience>> UpdateExperienceAsync(ExperienceUpdateRequestModel ExperienceUpdateRequestModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // get experience
+                var selectedExperience = await _experienceRepository.GetByIdAsync(ExperienceUpdateRequestModel.Id);
+
+                // check if exists
+                if (selectedExperience == null)
+                {
+                    return new ResultModel<Experience>
+                    {
+                        Success = false,
+                        Errors = [$"No experience found with id: {ExperienceUpdateRequestModel.Id}"],
+                    };
+                }
+
+                // update experience
+                selectedExperience.Location = ExperienceUpdateRequestModel.Location;
+                selectedExperience.Company = ExperienceUpdateRequestModel.Company;
+                selectedExperience.StartDate = ExperienceUpdateRequestModel.StartDate;
+                selectedExperience.EndDate = ExperienceUpdateRequestModel.EndDate;
+                selectedExperience.Position = ExperienceUpdateRequestModel.Position;
+                selectedExperience.Information = ExperienceUpdateRequestModel.Information;
+
+                await _experienceRepository.UpdateAsync(selectedExperience);
+
+                return new ResultModel<Experience>
+                {
+                    Success = true,
+                    Value = selectedExperience,
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("An error occurred while updating experience with id {Id}: {Message}", ExperienceUpdateRequestModel.Id, ex.Message);
+                return new ResultModel<Experience>
+                {
+                    Success = false,
+                    Errors = [$"An error occurred while updating experience with id: {ExperienceUpdateRequestModel.Id}. Please try again or contact support"]
+                };
+            }
         }
     }
 }
