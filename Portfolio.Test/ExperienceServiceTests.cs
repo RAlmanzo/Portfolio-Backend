@@ -311,5 +311,31 @@ namespace Portfolio.Tests
                 .ComparingByMembers<ExperienceUpdateRequestModel>());
             result.Errors.Should().BeNullOrEmpty();
         }
+
+        [Fact]
+        public async Task UpdateExperienceAsync_WhenExperienceNotFound_ReturnsError()
+        {
+            // Arrange
+            var request = new ExperienceUpdateRequestModel
+            {
+                Id = "abc123",
+                Location = "Updated Location",
+                Company = "Updated Company",
+                StartDate = DateTime.Now.AddYears(-1),
+                EndDate = DateTime.Now,
+                Position = "Updated Position",
+                Information = "Updated Information"
+            };
+
+            _mockExperienceRepository.Setup(r => r.GetByIdAsync(request.Id)).ReturnsAsync((Experience)null!);
+
+            // Act
+            var result = await _experienceService.UpdateExperienceAsync(request);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().Contain($"No experience found with id: {request.Id}");
+        }
     }
 }
