@@ -337,5 +337,34 @@ namespace Portfolio.Tests
             result.Value.Should().BeNull();
             result.Errors.Should().Contain($"No experience found with id: {request.Id}");
         }
+
+        [Fact]
+        public async Task UpdateExperienceAsync_WhithExceptionThrown_ReturnsError()
+        {
+            // Arrange
+            var request = new ExperienceUpdateRequestModel
+            {
+                Id = "abc123",
+                Location = "Updated Location",
+                Company = "Updated Company",
+                StartDate = DateTime.Now.AddYears(-1),
+                EndDate = DateTime.Now,
+                Position = "Updated Position",
+                Information = "Updated Information"
+            };
+
+            var existingExperience = new Experience { Id = request.Id, Company = "Old Company", Location = "Old Location", StartDate = DateTime.Now.AddYears(-2), EndDate = DateTime.Now.AddYears(-1), Position = "Old Position", Information = "Old Information" };
+
+            _mockExperienceRepository.Setup(r => r.GetByIdAsync(request.Id)).ReturnsAsync(existingExperience);
+            _mockExperienceRepository.Setup(r => r.UpdateAsync(It.IsAny<Experience>())).ThrowsAsync(new Exception("DB failure"));
+
+            // Act
+            var result = await _experienceService.UpdateExperienceAsync(request);
+
+            // Assert
+            result.Success.Should().BeFalse();
+            result.Value.Should().BeNull();
+            result.Errors.Should().ContainSingle().Which.Should().Be($"An error occurred while updating experience with id: {request.Id}. Please try again or contact support");
+        }
     }
 }
