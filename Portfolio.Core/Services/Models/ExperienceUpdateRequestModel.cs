@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Portfolio.Core.Services.Models
 {
-    public class ExperienceUpdateRequestModel
+    public class ExperienceUpdateRequestModel : ExperienceCreateRequestModel
     {
+        public required string Id { get; set; }
     }
 }
